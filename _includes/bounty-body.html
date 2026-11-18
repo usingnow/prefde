@@ -12,6 +12,7 @@
 {%- assign todo = b.threshold | minus: b.submissions_shown -%}
 {%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
 <main class="wrap">
+  {% include validate.html b=b %}
   <p class="backlink"><a href="{{ '/archive/' | relative_url }}">← 全部悬赏</a></p>
 
   <div class="grid">

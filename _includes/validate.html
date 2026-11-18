@@ -1,0 +1,36 @@
+{%- assign b = include.b -%}
+{%- assign problems = "" | split: "" -%}
+{%- assign ok_status = "open,judging,awarded,failed" | split: "," -%}
+{%- assign expected_code = b.name | remove: ".md" -%}
+
+{%- unless ok_status contains b.status -%}
+  {%- assign msg = "status 只能是 open / judging / awarded / failed，当前是「" | append: b.status | append: "」" -%}
+  {%- assign problems = problems | push: msg -%}
+{%- endunless -%}
+
+{%- if b.code != expected_code -%}
+  {%- assign msg = "code（" | append: b.code | append: "）必须等于文件名（" | append: expected_code | append: "），否则 /admin 的名单搜索会失效" -%}
+  {%- assign problems = problems | push: msg -%}
+{%- endif -%}
+
+{%- assign tz = b.deadline | date: "%z" -%}
+{%- unless tz == "+0800" -%}
+  {%- assign msg = "deadline 的时区应为 +08:00，当前是「" | append: tz | append: "」" -%}
+  {%- assign problems = problems | push: msg -%}
+{%- endunless -%}
+
+{%- if b.title == nil or b.title == "" -%}{%- assign problems = problems | push: "title 不能为空" -%}{%- endif -%}
+{%- if b.summary == nil or b.summary == "" -%}{%- assign problems = problems | push: "summary 不能为空" -%}{%- endif -%}
+{%- if b.reward == nil or b.reward == "" -%}{%- assign problems = problems | push: "reward 不能为空" -%}{%- endif -%}
+{%- if b.threshold == nil -%}{%- assign problems = problems | push: "threshold 必须是数字，不要加引号或「份」" -%}{%- endif -%}
+
+{%- if problems.size > 0 %}
+<div class="warn warn--error">
+  <strong>这一期的 front matter 有问题（{{ problems.size }} 处）</strong>
+  <ul>
+    {%- for p in problems %}
+    <li>{{ p }}</li>
+    {%- endfor %}
+  </ul>
+</div>
+{%- endif %}

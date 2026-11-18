@@ -654,3 +654,9 @@ pre code { font-size: 14px; }
   .life__step::before { top: 4px; left: -4px; }
   .life__step:last-child { padding-bottom: 0; }
 }
+
+
+/* ---------- 校验报错 ---------- */
+.warn--error { margin: var(--s5) 0 0; }
+.warn ul { margin: var(--s2) 0 0; padding-left: 18px; }
+.warn li { margin-bottom: 2px; line-height: 1.5; }

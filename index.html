@@ -17,6 +17,7 @@ title: 当期悬赏
 {%- assign todo = cur.threshold | minus: cur.submissions_shown -%}
 {%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
 <main class="wrap home">
+  {% include validate.html b=cur %}
   <div class="grid grid--home">
     <article class="col-main">
       {% include bounty-hero.html b=cur left_meta=left_meta %}
