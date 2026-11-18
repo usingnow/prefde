@@ -502,6 +502,14 @@ pre code { font-size: 14px; }
   text-transform: uppercase;
   color: var(--muted);
 }
+.past__desc {
+  margin: 0 0 var(--s4);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
 .past__more {
   margin: var(--s5) 0 0;
   font-family: var(--font-sans);
