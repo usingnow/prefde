@@ -1,0 +1,7 @@
+{%- case include.status -%}
+{%- when 'open' -%}<span class="state state--open"><i></i>征集中</span>
+{%- when 'judging' -%}<span class="state state--judging"><i></i>评审中</span>
+{%- when 'awarded' -%}<span class="state state--awarded"><i></i>已兑现</span>
+{%- when 'failed' -%}<span class="state state--failed"><i></i>未成团</span>
+{%- else -%}<span class="state state--failed"><i></i>未知</span>
+{%- endcase -%}

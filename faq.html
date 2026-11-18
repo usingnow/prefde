@@ -1,0 +1,108 @@
+---
+layout: default
+title: 如何参加
+permalink: /faq/
+---
+<main class="wrap page">
+  <p class="kicker">说明</p>
+  <h1 class="display display--sm">怎么参加</h1>
+  <p class="meta">三分钟读完，照着做就行</p>
+  <hr class="rule-red">
+
+  <div class="grid">
+    <article class="col-main">
+      <div class="article">
+        <p class="lede">本站没有账号系统、没有登录框。报名和投稿都发生在 GitHub 上——你的 GitHub 账号就是身份，Issue 就是报名表，Pull Request 就是投稿。</p>
+
+        <h2>这是什么</h2>
+
+        <p>每期一个题目，一个截止时间，一个奖励。达到门槛的投稿数量后，悬赏<em class="hl">才算成立</em>；然后评审，选出一人兑现。</p>
+
+        <p>规则和大多数众包不同的一点：<strong>门槛看的是投稿数，不是报名数。</strong> 报名只是告诉我们有多少人在看，真正让悬赏成立的，是有人交出东西。</p>
+
+        <h2>如何报名</h2>
+
+        <ol>
+          <li>在当期悬赏页点<strong>我要报名</strong>，浏览器跳到 GitHub</li>
+          <li><strong>没登录</strong>的话，GitHub 会先跳到登录页，登录后自动回到这张表单</li>
+          <li><strong>没账号</strong>的话，先注册一个（免费，五分钟）——这是参加的唯一门槛</li>
+          <li>表单顶部有一段说明，下面两个必填项：期号、你打算怎么做</li>
+          <li>点 <strong>Submit new issue</strong>，完成</li>
+        </ol>
+
+        <p>提交后你会得到一条属于你的 Issue。它同时是三样东西：报名记录、通知渠道（在下面回复，你会收到 GitHub 邮件）、以及评审时的上下文。</p>
+
+        <blockquote>一期内每人只开一条 Issue。重复的会被手动关闭，不影响报名结果。</blockquote>
+
+        <p>报名不收费、不绑定义务。但如果最后没交东西，不会计入门槛。</p>
+
+        <h2>如何投稿</h2>
+
+        <ol>
+          <li>把你的作品放在你自己的公开仓库里，写一份三分钟能跑起来的说明</li>
+          <li>提一个 Pull Request，新增文件 <code>_submissions/期号/你的GitHub用户名.md</code></li>
+          <li>正文里放两个链接：代码仓库、演示地址。说明一段话讲清你做了什么</li>
+        </ol>
+
+        <p>不要提交二进制文件——图片、压缩包、视频一律给外链。文件名必须是你的 GitHub 用户名，这是唯一的去重手段。</p>
+
+        <h2>评审与兑现</h2>
+
+        <table>
+          <thead>
+            <tr><th>阶段</th><th>发生什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>截止</td><td>投稿关闭，状态变为「评审中」</td></tr>
+            <tr><td>评审</td><td>按当期公布的维度打分，过程在 PR 里公开</td></tr>
+            <tr><td>公布</td><td>优胜者在本期 Issue 下回复，并在页面上更新</td></tr>
+            <tr><td>兑现</td><td>页面给出兑现记录链接</td></tr>
+          </tbody>
+        </table>
+
+        <h2>状态是什么意思</h2>
+
+        <table>
+          <thead>
+            <tr><th>标记</th><th>含义</th><th>你还能做什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>{% include state.html status='open' %}</td><td>报名与投稿进行中</td><td>报名、投稿、修改投稿</td></tr>
+            <tr><td>{% include state.html status='judging' %}</td><td>已截止，评审中</td><td>只能在 PR 里补充说明</td></tr>
+            <tr><td>{% include state.html status='awarded' %}</td><td>已选出优胜者并兑现</td><td>无</td></tr>
+            <tr><td>{% include state.html status='failed' %}</td><td>未达门槛，悬赏未成立</td><td>无，作品仍归作者</td></tr>
+          </tbody>
+        </table>
+
+        <h2>常见问题</h2>
+
+        <ul>
+          <li><strong>可以组队吗？</strong> 默认个人。组队请在报名 Issue 里写明成员，奖励按一份计。</li>
+          <li><strong>可以用现成的库吗？</strong> 可以。但题目里点名要自己写的部分，必须自己写。</li>
+          <li><strong>晚一分钟算吗？</strong> 以 PR 的创建时间为准，不看推送时间。</li>
+          <li><strong>落选的作品归谁？</strong> 归你。本站不主张任何权利，也不会二次使用。</li>
+          <li><strong>可以连续参加多期吗？</strong> 可以，每期单独报名。</li>
+          <li><strong>为什么一定要用 GitHub？</strong> 因为身份、时间戳、记录都在那里，而且公开可查——不需要信任任何一方。</li>
+          <li><strong>没有 GitHub 账号怎么办？</strong> 注册一个，五分钟。这是参加的唯一门槛。</li>
+        </ul>
+      </div>
+    </article>
+
+    <aside class="col-side">
+      <h2 class="side__title">三步</h2>
+      <ul class="legend">
+        <li><span><strong>01</strong> 报名：开一条 Issue</span></li>
+        <li><span><strong>02</strong> 投稿：提一个 PR</span></li>
+        <li><span><strong>03</strong> 等评审</span></li>
+      </ul>
+
+      <h2 class="side__title">入口</h2>
+      <ul class="legend">
+        <li><a href="{{ '/' | relative_url }}">当期悬赏</a></li>
+        <li><a href="{{ '/archive/' | relative_url }}">往期归档</a></li>
+        <li><a href="{{ site.repo_url }}/issues?q=is%3Aissue+label%3Asignup">全部报名</a></li>
+        <li><a href="{{ site.repo_url }}/pulls?q=is%3Apr+label%3Asubmission">全部投稿</a></li>
+      </ul>
+    </aside>
+  </div>
+</main>

@@ -1,0 +1,41 @@
+title: PreFDE 加油站
+tagline: 一期一题，满额成团
+description: 面向计算机与应用数学专业学生的悬赏板。报名与投稿达到门槛后，悬赏成立，评审一人兑现。
+url: "https://prefde.usingnow.tech"
+baseurl: ""
+
+# 不依赖 site.github（jekyll-github-metadata 本地预览需要 token），
+# 改用显式配置，本地与 Pages 行为一致。
+repo: "usingnow/prefde"
+repo_url: "https://github.com/usingnow/prefde"
+branch: "main"
+
+timezone: Asia/Shanghai
+lang: zh-CN
+
+collections:
+  bounties:
+    output: true
+    permalink: /b/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: bounties
+    values:
+      layout: bounty
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+sass:
+  style: compressed
+  sass_dir: _sass
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - docs
+  - vendor

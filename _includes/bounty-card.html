@@ -1,0 +1,9 @@
+{%- assign c = include.b -%}
+<a class="bcard" href="{{ c.url | relative_url }}">
+  <div class="bcard__top">
+    <span class="bcard__date">{{ c.opens | date: "%Y.%m.%d" }}</span>
+    {% include state.html status=c.status %}
+  </div>
+  <h3 class="bcard__title">{{ c.title }}</h3>
+  <p class="bcard__meta">{{ c.reward }} · {{ c.submissions_shown }} / {{ c.threshold }} 份投稿</p>
+</a>

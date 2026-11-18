@@ -1,0 +1,52 @@
+---
+layout: default
+title: 管理台
+permalink: /admin/
+noindex: true
+---
+<main class="wrap page">
+  <p class="kicker">内部</p>
+  <h1 class="display display--sm">管理台</h1>
+  <p class="meta">点「编辑」改 frontmatter 状态，提交后自动重建</p>
+  <hr class="rule-red">
+
+  {%- if site.repo_url contains 'OWNER' %}
+  <div class="warn">
+    <strong>仓库还没配置。</strong>
+    把 <code>_config.yml</code> 里的 <code>repo</code> 和 <code>repo_url</code> 改成真实仓库（如 <code>you/bounty</code>），
+    下面的「编辑」「名单」和页面上的「我要报名」才会生效。改完要重启 <code>jekyll serve</code>。
+  </div>
+  {%- endif %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>期号</th>
+        <th>题目</th>
+        <th>状态</th>
+        <th class="num">报名</th>
+        <th class="num">投稿</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%- assign all = site.bounties | sort: "opens" | reverse -%}
+    {%- for b in all %}
+      <tr>
+        <td class="mono">{{ b.code }}</td>
+        <td>{{ b.title }}</td>
+        <td>{% include state.html status=b.status %}</td>
+        <td class="num">{{ b.signups_shown }}</td>
+        <td class="num">{{ b.submissions_shown }} / {{ b.threshold }}</td>
+        <td class="ops">
+          <a href="{{ site.repo_url }}/edit/{{ site.branch }}/{{ b.path }}">编辑</a>
+          <a href="{{ site.repo_url }}/issues?q=is%3Aissue+label%3Asignup+%22{{ b.code }}%22">名单</a>
+          <a href="{{ b.url | relative_url }}">预览</a>
+        </td>
+      </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+
+  <p class="note">报名走 Issue，投稿走 PR。状态字段只允许 <code>open</code> / <code>judging</code> / <code>awarded</code> / <code>failed</code>。</p>
+</main>

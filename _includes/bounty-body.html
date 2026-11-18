@@ -1,0 +1,71 @@
+{%- assign b = include.b -%}
+{%- assign now = site.time | date: "%s" | plus: 0 -%}
+{%- assign dl = b.deadline | date: "%s" | plus: 0 -%}
+{%- assign secs = dl | minus: now -%}
+{%- assign days = secs | divided_by: 86400 -%}
+{%- if secs <= 0 -%}{%- assign left = "已截止" -%}
+{%- elsif days < 1 -%}{%- assign left = "不足 1 天" -%}
+{%- else -%}{%- assign left = days | append: " 天" -%}{%- endif -%}
+{%- if secs > 0 -%}{%- assign left_meta = "剩 " | append: left -%}{%- else -%}{%- assign left_meta = left -%}{%- endif -%}
+{%- assign pct = b.submissions_shown | times: 100 | divided_by: b.threshold -%}
+{%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
+{%- assign todo = b.threshold | minus: b.submissions_shown -%}
+{%- assign signup_url = site.repo_url | append: "/issues/new?template=signup.yml&amp;title=[报名]+" | append: b.code -%}
+<main class="wrap">
+  <section class="hero">
+    <p class="kicker">{{ b.kicker | default: "悬赏" }}</p>
+    <h1 class="display">{{ b.title }}</h1>
+    <p class="meta">{{ b.opens | date: "%Y.%m.%d" }} 发布 · 截止 {{ b.deadline | date: "%Y.%m.%d %H:%M" }} · {{ left_meta }}</p>
+    <hr class="rule-red">
+  </section>
+
+  <div class="grid">
+    <article class="col-main">
+      <p class="lede">{{ b.summary }}</p>
+
+      <dl class="stats">
+        <div class="stat"><dt>奖励</dt><dd>{{ b.reward }}</dd></div>
+        <div class="stat"><dt>门槛</dt><dd>{{ b.threshold }} 份</dd></div>
+        <div class="stat"><dt>剩余</dt><dd>{{ left }}</dd></div>
+      </dl>
+
+      <div class="progress">
+        <div class="progress__row">
+          <span class="progress__num">{{ b.submissions_shown }}<span class="progress__den"> / {{ b.threshold }}</span></span>
+          <span class="progress__bar"><span style="width: {{ pct }}%"></span></span>
+        </div>
+        <p class="progress__note">
+          {%- if todo > 0 -%}还差 {{ todo }} 份成团 · {% else %}已达门槛 · {% endif -%}
+          {{ b.signups_shown }} 人已报名
+        </p>
+      </div>
+
+      {%- if b.status == 'open' %}
+      <div class="actions">
+        <a class="btn btn--primary" href="{{ signup_url }}">我要报名</a>
+        <a class="btn btn--ghost" href="{{ site.repo_url }}/pulls?q=is%3Apr+label%3Asubmission">查看投稿</a>
+      </div>
+      {%- elsif b.status == 'awarded' %}
+      <p class="verdict">优胜者 <strong>@{{ b.winner }}</strong> · <a href="{{ b.payout }}">兑现记录</a></p>
+      {%- endif %}
+
+      <div class="article">{{ b.content }}</div>
+    </article>
+
+    <aside class="col-side">
+      <h2 class="side__title">状态说明</h2>
+      <ul class="legend">
+        <li>{% include state.html status='open' %}<span>报名与投稿进行中</span></li>
+        <li>{% include state.html status='judging' %}<span>已截止，评审中</span></li>
+        <li>{% include state.html status='awarded' %}<span>已选出优胜者并兑现</span></li>
+        <li>{% include state.html status='failed' %}<span>未达门槛，悬赏未成立</span></li>
+      </ul>
+
+      <h2 class="side__title">往期</h2>
+      {%- assign all = site.bounties | sort: "opens" | reverse -%}
+      {%- for x in all -%}
+        {%- if x.code != b.code %}{% include bounty-card.html b=x %}{% endif -%}
+      {%- endfor %}
+    </aside>
+  </div>
+</main>

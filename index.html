@@ -1,0 +1,7 @@
+---
+layout: default
+title: 当期悬赏
+---
+{%- assign cur = site.bounties | where: "status", "open" | sort: "opens" | last -%}
+{%- if cur == nil -%}{%- assign cur = site.bounties | sort: "opens" | last -%}{%- endif -%}
+{% include bounty-body.html b=cur %}
