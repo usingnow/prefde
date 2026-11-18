@@ -6,7 +6,10 @@
     <a class="prow" href="{{ x.url | relative_url }}">
       <span class="prow__date">{{ x.opens | date: "%Y.%m.%d" }}</span>
       <span class="prow__state">{% include state.html status=x.status %}</span>
-      <span class="prow__title">{{ x.title }}</span>
+      <span class="prow__main">
+        <span class="prow__title">{{ x.title }}</span>
+        <span class="prow__desc">{{ x.summary | strip_html }}</span>
+      </span>
       <span class="prow__reward">{{ x.reward }}</span>
     </a>
     {%- assign n = n | plus: 1 -%}

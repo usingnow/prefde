@@ -39,7 +39,6 @@ title: 当期悬赏
 
   <section class="past">
     <h2 class="past__title">往期</h2>
-    <p class="past__desc">按发布时间倒序。点开任意一期，可以看当时的题目、投稿和最终结果。</p>
     {% include past-list.html exclude=cur.code limit=3 %}
     <p class="past__more"><a href="{{ '/archive/' | relative_url }}">查看全部 {{ site.bounties | size }} 期 →</a></p>
   </section>
