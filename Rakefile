@@ -38,8 +38,8 @@ def open_in_editor(path)
   false
 end
 
-desc '新建一期悬赏（交互式，输入 rake 就行）'
-task :new, [:date, :title] do |_t, args|
+desc '新建一期悬赏（交互式，直接 rake bounty）'
+task :bounty, [:date, :title] do |_t, args|
   interactive = $stdin.tty? && args[:date].nil?
 
   puts ""
@@ -107,4 +107,10 @@ task :new, [:date, :title] do |_t, args|
   end
 end
 
-task :default => :new
+task :default do
+  puts ""
+  puts "用法：rake <任务名>。当前可用："
+  puts ""
+  system("rake", "-T")
+  puts ""
+end
