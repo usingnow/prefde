@@ -515,7 +515,7 @@ pre code { font-size: 14px; }
   grid-template-columns: 96px 92px minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--s4);
-  padding: var(--s3) 0;
+  padding: var(--s3) 0 var(--s3) var(--s3);
   border-top: 1px solid var(--rule);
   text-decoration: none;
   color: inherit;
