@@ -434,3 +434,34 @@ pre code { font-size: 14px; }
   line-height: 1.6;
 }
 .warn strong { font-weight: 600; }
+
+/* ---------- 评论区 ---------- */
+.comments {
+  margin-top: var(--s8);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--rule-strong);
+  max-width: 680px;
+}
+.comments__title {
+  margin: 0 0 var(--s2);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.comments__note {
+  margin: 0 0 var(--s5);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+.comments__warn {
+  padding: var(--s3) var(--s4);
+  background: var(--paper-2);
+  border-left: 3px solid var(--red);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-2);
+}

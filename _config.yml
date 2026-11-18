@@ -25,6 +25,13 @@ defaults:
     values:
       layout: bounty
 
+# giscus 评论区：到 https://giscus.app/zh-CN 生成 repo_id / category_id 后填入
+giscus:
+  repo: "usingnow/prefde"
+  repo_id: ""            # R_xxxxxxxx
+  category: "Announcements"
+  category_id: ""        # DIC_xxxxxxxx
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap

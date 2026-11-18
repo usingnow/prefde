@@ -50,6 +50,10 @@
       {%- endif %}
 
       <div class="article">{{ b.content }}</div>
+
+      {%- if include.show_comments %}
+      {% include comments.html %}
+      {%- endif %}
     </article>
 
     <aside class="col-side">

@@ -1,0 +1,32 @@
+<section class="comments" id="comments">
+  <h2 class="comments__title">讨论</h2>
+  <p class="comments__note">
+    报名请点上方的「我要报名」，走 GitHub Issue 登记；这里只用来讨论题目。
+  </p>
+
+  {%- if site.giscus.repo_id != "" and site.giscus.category_id != "" %}
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ site.giscus.repo }}"
+          data-repo-id="{{ site.giscus.repo_id }}"
+          data-category="{{ site.giscus.category }}"
+          data-category-id="{{ site.giscus.category_id }}"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="light"
+          data-lang="zh-CN"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+  {%- else %}
+    {%- if jekyll.environment == "development" %}
+  <p class="comments__warn">
+    评论区未配置：在 <code>_config.yml</code> 的 <code>giscus</code> 段填入
+    <code>repo_id</code> 和 <code>category_id</code>（到 giscus.app 生成）。
+  </p>
+    {%- endif %}
+  {%- endif %}
+</section>
