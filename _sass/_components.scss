@@ -642,15 +642,6 @@ pre code { font-size: 14px; }
   line-height: 1.65;
   color: var(--muted);
 }
-.life__fail {
-  margin: var(--s3) 0 0;
-  padding-left: 10px;
-  border-left: 1px dashed var(--rule);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--ink-2);
-}
 
 @media (max-width: 767px) {
   .life { grid-template-columns: 1fr; }
