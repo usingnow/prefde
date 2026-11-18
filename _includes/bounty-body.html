@@ -10,7 +10,7 @@
 {%- assign pct = b.submissions_shown | times: 100 | divided_by: b.threshold -%}
 {%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
 {%- assign todo = b.threshold | minus: b.submissions_shown -%}
-{%- assign signup_url = site.repo_url | append: "/issues/new?template=signup.yml" -%}
+{%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
 <main class="wrap">
   <section class="hero">
     <p class="kicker">{{ b.kicker | default: "悬赏" }}</p>
