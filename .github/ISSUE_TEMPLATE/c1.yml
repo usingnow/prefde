@@ -1,5 +1,6 @@
-name: B1 无title
-description: 二分排查用，确认后删除（B1 无title）
+name: 报名
+description: 报名参加本期悬赏
+title: "[报名] "
 labels: ["报名"]
 body:
   - type: markdown

@@ -1,9 +1,0 @@
-name: DEBUG 最小表单
-description: 排查模板是否被识别，确认后删除
-body:
-  - type: input
-    id: x
-    attributes:
-      label: 随便填
-    validations:
-      required: true

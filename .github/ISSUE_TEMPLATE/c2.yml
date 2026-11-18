@@ -1,5 +1,7 @@
-name: B3 都无
-description: 二分排查用，确认后删除（B3 都无）
+name: 报名表
+description: 报名参加本期悬赏
+title: "[报名] "
+labels: ["报名"]
 body:
   - type: markdown
     attributes:
