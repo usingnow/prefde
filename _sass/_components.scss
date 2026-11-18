@@ -465,3 +465,90 @@ pre code { font-size: 14px; }
   font-size: 13px;
   color: var(--ink-2);
 }
+
+/* ---------- 首页：当期主角 ---------- */
+.backlink {
+  margin: var(--s5) 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.backlink a { text-decoration: none; color: var(--muted); }
+.backlink a:hover { color: var(--red); }
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(420px, 56vh, 660px);
+}
+.lead > .lede { margin-top: var(--s6); }
+
+/* ---------- 往期行 ---------- */
+.past {
+  margin-top: var(--s7);
+  padding-top: var(--s5);
+  border-top: 1px solid var(--rule-strong);
+}
+.past__title {
+  margin: 0 0 var(--s2);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.past__more {
+  margin: var(--s5) 0 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+.past__more a { text-decoration: none; }
+.past__more a:hover { text-decoration: underline; }
+
+.prow {
+  display: grid;
+  grid-template-columns: 96px 92px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.12s;
+}
+.prow:last-child { border-bottom: 1px solid var(--rule); }
+.prow:hover { box-shadow: inset 2px 0 0 var(--red); color: inherit; }
+.prow:hover .prow__title { color: var(--red); }
+.prow__date {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.prow__state { display: flex; }
+.prow__title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  transition: color 0.12s;
+}
+.prow__reward {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 599px) {
+  .lead { min-height: 0; }
+  .lead .actions { margin-top: var(--s5); padding-top: 0; }
+  .prow {
+    grid-template-columns: auto 1fr auto;
+    row-gap: var(--s1);
+  }
+  .prow__date { grid-column: 1; grid-row: 1; }
+  .prow__state { grid-column: 2; grid-row: 1; }
+  .prow__reward { grid-column: 3; grid-row: 1; }
+  .prow__title { grid-column: 1 / -1; grid-row: 2; font-size: 17px; }
+}

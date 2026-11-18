@@ -4,6 +4,7 @@ title: 管理台
 permalink: /admin/
 noindex: true
 ---
+{% if jekyll.environment == "development" %}
 <main class="wrap page">
   <p class="kicker">内部</p>
   <h1 class="display display--sm">管理台</h1>
@@ -50,3 +51,11 @@ noindex: true
 
   <p class="note">报名走 Issue，投稿走 PR。状态字段只允许 <code>open</code> / <code>judging</code> / <code>awarded</code> / <code>failed</code>。</p>
 </main>
+{% else %}
+<main class="wrap page">
+  <p class="kicker">内部</p>
+  <h1 class="display display--sm">此页面仅本地可用</h1>
+  <p class="meta">管理台只在 <code>jekyll serve</code> 时生成。线上请直接编辑仓库里的文件。</p>
+  <hr class="rule-red">
+</main>
+{% endif %}
