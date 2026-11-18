@@ -1,0 +1,7 @@
+<h2 class="side__title">状态说明</h2>
+<ul class="legend">
+  <li>{% include state.html status='open' %}<span>报名与投稿进行中</span></li>
+  <li>{% include state.html status='judging' %}<span>已截止，评审中</span></li>
+  <li>{% include state.html status='awarded' %}<span>已选出优胜者并兑现</span></li>
+  <li>{% include state.html status='failed' %}<span>未达门槛，悬赏未成立</span></li>
+</ul>

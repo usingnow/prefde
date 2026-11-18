@@ -16,16 +16,24 @@ title: 当期悬赏
 {%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
 {%- assign todo = cur.threshold | minus: cur.submissions_shown -%}
 {%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
-<main class="wrap">
-  <div class="lead">
-    {% include bounty-hero.html b=cur left_meta=left_meta %}
-    <p class="lede">{{ cur.summary }}</p>
-    {% include bounty-metrics.html b=cur left=left pct=pct todo=todo %}
-    <div class="actions">
-      <a class="btn btn--primary" target="_blank" rel="noopener" href="{{ signup_url }}">我要报名</a>
-      <a class="btn btn--ghost" href="{{ cur.url | relative_url }}">看完整题目 →</a>
-    </div>
+<main class="wrap home">
+  <div class="grid grid--home">
+    <article class="col-main">
+      {% include bounty-hero.html b=cur left_meta=left_meta %}
+      <p class="lede">{{ cur.summary }}</p>
+      {% include bounty-metrics.html b=cur left=left pct=pct todo=todo %}
+      <div class="actions">
+        <a class="btn btn--primary" target="_blank" rel="noopener" href="{{ signup_url }}">我要报名</a>
+        <a class="btn btn--ghost" href="{{ cur.url | relative_url }}">看完整题目 →</a>
+      </div>
+    </article>
+
+    <aside class="col-side">
+      {% include state-legend.html %}
+    </aside>
   </div>
+
+  {% include explain.html %}
 
   <section class="past">
     <h2 class="past__title">往期</h2>

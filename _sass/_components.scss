@@ -46,7 +46,7 @@
 }
 
 /* ---------- 页头 ---------- */
-.hero { padding: var(--s7) 0 0; }
+.hero { padding: 0; }
 .kicker {
   margin: 0 0 var(--s3);
   font-family: var(--font-sans);
@@ -87,7 +87,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
   gap: var(--s8);
-  padding: var(--s6) 0 var(--s9);
+  padding: var(--s7) 0 var(--s9);
 }
 .col-main { min-width: 0; }
 .col-side { min-width: 0; }
@@ -237,7 +237,7 @@
   font-weight: 600;
 }
 .article blockquote p { margin: 0; }
-.article em.hl {
+em.hl {
   font-style: normal;
   border-bottom: 2px solid var(--red);
   padding-bottom: 1px;
@@ -475,13 +475,9 @@ pre code { font-size: 14px; }
 .backlink a { text-decoration: none; color: var(--muted); }
 .backlink a:hover { color: var(--red); }
 
-.lead {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: clamp(420px, 56vh, 660px);
-}
-.lead > .lede { margin-top: var(--s6); }
+.grid--home { padding: var(--s7) 0 0; }
+.hero + .lede { margin-top: var(--s5); }
+.home { padding-bottom: var(--s9); }
 
 /* ---------- 往期行 ---------- */
 .past {
@@ -541,8 +537,6 @@ pre code { font-size: 14px; }
 }
 
 @media (max-width: 599px) {
-  .lead { min-height: 0; }
-  .lead .actions { margin-top: var(--s5); padding-top: 0; }
   .prow {
     grid-template-columns: auto 1fr auto;
     row-gap: var(--s1);
@@ -551,4 +545,42 @@ pre code { font-size: 14px; }
   .prow__state { grid-column: 2; grid-row: 1; }
   .prow__reward { grid-column: 3; grid-row: 1; }
   .prow__title { grid-column: 1 / -1; grid-row: 2; font-size: 17px; }
+}
+
+
+/* ---------- 说明条 ---------- */
+.explain {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s7);
+  margin-top: var(--s7);
+  padding-top: var(--s5);
+  border-top: 1px solid var(--rule-strong);
+}
+.explain__item { min-width: 0; }
+.explain__title {
+  margin: 0 0 var(--s3);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.explain__no {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--red);
+  margin-right: 8px;
+}
+.explain__body {
+  margin: 0 0 var(--s3);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.explain__more { margin: 0; font-family: var(--font-sans); font-size: 13px; }
+.explain__more a { text-decoration: none; }
+.explain__more a:hover { text-decoration: underline; }
+
+@media (max-width: 767px) {
+  .explain { grid-template-columns: 1fr; gap: var(--s5); }
 }

@@ -14,10 +14,9 @@
 <main class="wrap">
   <p class="backlink"><a href="{{ '/archive/' | relative_url }}">← 全部悬赏</a></p>
 
-  {% include bounty-hero.html b=b left_meta=left_meta %}
-
   <div class="grid">
     <article class="col-main">
+      {% include bounty-hero.html b=b left_meta=left_meta %}
       <p class="lede">{{ b.summary }}</p>
 
       {% include bounty-metrics.html b=b left=left pct=pct todo=todo %}
@@ -39,13 +38,7 @@
     </article>
 
     <aside class="col-side">
-      <h2 class="side__title">状态说明</h2>
-      <ul class="legend">
-        <li>{% include state.html status='open' %}<span>报名与投稿进行中</span></li>
-        <li>{% include state.html status='judging' %}<span>已截止，评审中</span></li>
-        <li>{% include state.html status='awarded' %}<span>已选出优胜者并兑现</span></li>
-        <li>{% include state.html status='failed' %}<span>未达门槛，悬赏未成立</span></li>
-      </ul>
+      {% include state-legend.html %}
 
       <h2 class="side__title">往期</h2>
       {%- assign all = site.bounties | sort: "opens" | reverse -%}
