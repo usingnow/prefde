@@ -1,14 +1,15 @@
 {%- assign b = include.b -%}
 {%- assign problems = "" | split: "" -%}
 {%- assign ok_status = "open,judging,awarded,failed" | split: "," -%}
-{%- assign expected_code = b.name | remove: ".md" -%}
+{%- assign fname = b.path | split: "/" | last -%}
+{%- assign expected_code = fname | remove: ".md" -%}
 
 {%- unless ok_status contains b.status -%}
   {%- assign msg = "status 只能是 open / judging / awarded / failed，当前是「" | append: b.status | append: "」" -%}
   {%- assign problems = problems | push: msg -%}
 {%- endunless -%}
 
-{%- if b.code != expected_code -%}
+{%- if expected_code != "" and b.code != expected_code -%}
   {%- assign msg = "code（" | append: b.code | append: "）必须等于文件名（" | append: expected_code | append: "），否则 /admin 的名单搜索会失效" -%}
   {%- assign problems = problems | push: msg -%}
 {%- endif -%}
