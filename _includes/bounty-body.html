@@ -43,7 +43,7 @@
       {%- if b.status == 'open' %}
       <div class="actions">
         <a class="btn btn--primary" href="{{ signup_url }}">我要报名</a>
-        <a class="btn btn--ghost" href="{{ site.repo_url }}/pulls?q=is%3Apr+label%3Asubmission">查看投稿</a>
+        <a class="btn btn--ghost" href="{{ site.repo_url }}/pulls?q=is%3Apr+label%3A%E6%8A%95%E7%A8%BF">查看投稿</a>
       </div>
       {%- elsif b.status == 'awarded' %}
       <p class="verdict">优胜者 <strong>@{{ b.winner }}</strong> · <a href="{{ b.payout }}">兑现记录</a></p>
