@@ -3,6 +3,12 @@ require "date"
 
 DEADLINE_DAYS = 7
 
+# 选项改这里就行。序号从 1 开始，最后一项「其它」会自动加。
+REWARD_OPTIONS    = ["¥20", "¥50", "¥100", "¥200"]
+REWARD_DEFAULT    = "¥50"
+THRESHOLD_OPTIONS = [5, 8, 10, 15, 20]
+THRESHOLD_DEFAULT = 10
+
 # 读一行输入。空回车用默认值；非交互环境（管道、CI）直接返回默认值。
 def ask(label, default = nil)
   prompt = default ? "#{label}（回车＝#{default}）：" : "#{label}："
@@ -12,6 +18,29 @@ def ask(label, default = nil)
   return default if line.nil?
   line = line.strip
   line.empty? ? default : line
+end
+
+# 多选一。回车用默认值；输入序号选对应项；输入其它内容当自定义值。
+def choose(label, options, default)
+  puts ""
+  puts "#{label}："
+  options.each_with_index { |o, i| puts "  #{i + 1}) #{o}" }
+  puts "  #{options.size + 1}) 其它（手动输入）"
+  print "选一个（回车＝#{default}）："
+  $stdout.flush
+
+  line = $stdin.gets
+  return default if line.nil?
+  line = line.strip
+  return default if line.empty?
+
+  if line =~ /\A\d+\z/
+    n = line.to_i
+    return options[n - 1] if n >= 1 && n <= options.size
+    return ask("自定义值") if n == options.size + 1
+  end
+
+  line
 end
 
 # 跨平台找可执行文件
@@ -52,8 +81,9 @@ task :bounty, [:date, :title] do |_t, args|
 
   title     = interactive ? ask("标题") : (args[:title] || "（待填标题）")
   title     = "（待填标题）" if title.nil? || title.to_s.empty?
-  reward    = interactive ? ask("奖励", "¥800") : "¥800"
-  threshold = interactive ? ask("成团门槛（几份投稿）", "10") : "10"
+  reward    = interactive ? choose("奖励", REWARD_OPTIONS, REWARD_DEFAULT) : REWARD_DEFAULT
+  reward    = "¥#{reward}" if reward.to_s =~ /\A\d+\z/   # 手输数字自动补 ¥
+  threshold = interactive ? choose("成团门槛", THRESHOLD_OPTIONS.map { |t| "#{t} 份" }, "#{THRESHOLD_DEFAULT} 份") : THRESHOLD_DEFAULT
 
   th = threshold.to_s.gsub(/[^0-9]/, "")
   th = "10" if th.empty?
