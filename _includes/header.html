@@ -1,3 +1,5 @@
+{%- assign nav_cur = site.bounties | where: "status", "open" | sort: "opens" | last -%}
+{%- if nav_cur == nil -%}{%- assign nav_cur = site.bounties | sort: "opens" | last -%}{%- endif -%}
 <header class="site-head">
   <div class="wrap site-head__inner">
     <a class="brand" href="{{ '/' | relative_url }}">
@@ -5,7 +7,11 @@
       <span class="brand__name">{{ site.title }}</span>
     </a>
     <nav class="nav">
-      <a href="{{ '/' | relative_url }}">当期</a>
+      {%- if nav_cur %}
+      <a class="nav__primary" href="{{ nav_cur.url | relative_url }}">当期</a>
+      <span class="nav__sep" aria-hidden="true"></span>
+      {%- endif %}
+      <a href="{{ '/' | relative_url }}">首页</a>
       <a href="{{ '/faq/' | relative_url }}">说明</a>
       <a href="{{ '/archive/' | relative_url }}">归档</a>
     </nav>

@@ -36,6 +36,13 @@
   text-decoration: none;
 }
 .nav a:hover { color: var(--red); }
+.nav__primary { font-weight: 600; }
+.nav__sep {
+  width: 1px;
+  height: 14px;
+  align-self: center;
+  background: var(--rule);
+}
 
 @media (max-width: 599px) {
   .site-head__inner { min-height: 60px; gap: var(--s4); }
@@ -43,6 +50,7 @@
   .brand__name { display: none; }
   .nav { gap: var(--s4); }
   .nav a { font-size: 14px; }
+  .nav__sep { height: 12px; }
 }
 
 /* ---------- 页头 ---------- */
