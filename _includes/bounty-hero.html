@@ -2,6 +2,6 @@
 <section class="hero">
   <p class="kicker">{{ b.kicker | default: "悬赏" }}</p>
   <h1 class="display">{{ b.title }}</h1>
-  <p class="meta">{{ b.opens | date: "%Y.%m.%d" }} 发布 · 截止 {{ b.deadline | date: "%Y.%m.%d %H:%M" }} · {{ include.left_meta }}</p>
+  <p class="meta">{% include level.html level=b.level %} · {{ b.opens | date: "%Y.%m.%d" }} 发布 · 截止 {{ b.deadline | date: "%Y.%m.%d %H:%M" }} · {{ include.left_meta }}</p>
   <hr class="rule-red">
 </section>

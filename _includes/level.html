@@ -1,0 +1,16 @@
+{%- assign lv = include.level | plus: 0 -%}
+{%- if include.short -%}
+  {%- case lv -%}
+  {%- when 1 -%}<span class="level">L1</span>
+  {%- when 2 -%}<span class="level">L2</span>
+  {%- when 3 -%}<span class="level">L3</span>
+  {%- else -%}<span class="level">—</span>
+  {%- endcase -%}
+{%- else -%}
+  {%- case lv -%}
+  {%- when 1 -%}<span class="level">L1 基础</span>
+  {%- when 2 -%}<span class="level">L2 进阶</span>
+  {%- when 3 -%}<span class="level">L3 挑战</span>
+  {%- else -%}<span class="level">未分级</span>
+  {%- endcase -%}
+{%- endif -%}

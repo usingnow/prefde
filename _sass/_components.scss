@@ -512,7 +512,7 @@ pre code { font-size: 14px; }
 
 .prow {
   display: grid;
-  grid-template-columns: 96px 92px minmax(0, 1fr) auto;
+  grid-template-columns: 96px 92px 36px minmax(0, 1fr) auto;
   align-items: start;
   gap: var(--s4);
   padding: var(--s3) 0 var(--s3) var(--s3);
@@ -532,6 +532,7 @@ pre code { font-size: 14px; }
   font-variant-numeric: tabular-nums;
 }
 .prow__state { display: flex; padding-top: 5px; }
+.prow__level { padding-top: 4px; }
 .prow__main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .prow__title {
   font-size: 18px;
@@ -555,12 +556,13 @@ pre code { font-size: 14px; }
 
 @media (max-width: 599px) {
   .prow {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto auto 1fr auto;
     row-gap: var(--s1);
   }
   .prow__date { grid-column: 1; grid-row: 1; }
   .prow__state { grid-column: 2; grid-row: 1; }
-  .prow__reward { grid-column: 3; grid-row: 1; }
+  .prow__level { grid-column: 3; grid-row: 1; }
+  .prow__reward { grid-column: 5; grid-row: 1; }
   .prow__main { grid-column: 1 / -1; grid-row: 2; }
   .prow__title { font-size: 17px; }
   .prow__desc { font-size: 13px; }
@@ -660,3 +662,13 @@ pre code { font-size: 14px; }
 .warn--error { margin: var(--s5) 0 0; }
 .warn ul { margin: var(--s2) 0 0; padding-left: 18px; }
 .warn li { margin-bottom: 2px; line-height: 1.5; }
+
+/* ---------- 难度等级 ---------- */
+.level {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.meta .level { font-size: 12px; }

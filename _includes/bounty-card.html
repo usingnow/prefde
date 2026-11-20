@@ -3,6 +3,7 @@
   <div class="bcard__top">
     <span class="bcard__date">{{ c.opens | date: "%Y.%m.%d" }}</span>
     {% include state.html status=c.status %}
+    {% include level.html level=c.level short=true %}
   </div>
   <h3 class="bcard__title">{{ c.title }}</h3>
   <p class="bcard__meta">{{ c.reward }} · {{ c.submissions_shown }} / {{ c.threshold }} 份投稿</p>
