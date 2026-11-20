@@ -27,6 +27,14 @@ body:
     validations:
       required: true
   - type: checkboxes
+    id: eligible
+    attributes:
+      label: 资格确认
+      description: 这个站面向在校学生。不符也欢迎参与讨论，但不进入评奖。
+      options:
+        - label: 我是在校学生（计算机 / 软件 / 数学 / 统计 / 经济等相关专业）
+          required: true
+  - type: checkboxes
     id: confirm
     attributes:
       label: 确认
