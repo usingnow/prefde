@@ -41,11 +41,14 @@
     <aside class="col-side">
       {% include state-legend.html %}
 
+      {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" -%}
+      {%- if closed.size > 0 %}
       <h2 class="side__title">往期</h2>
-      {%- assign all = site.bounties | sort: "opens" | reverse -%}
-      {%- for x in all -%}
-        {%- if x.code != b.code %}{% include bounty-card.html b=x %}{% endif -%}
+      {%- assign recent = closed | sort: "deadline" | reverse -%}
+      {%- for x in recent limit: 3 %}
+        {% include bounty-card.html b=x %}
       {%- endfor %}
+      {%- endif %}
     </aside>
   </div>
 </main>
