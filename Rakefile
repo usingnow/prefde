@@ -166,7 +166,7 @@ PDF_CSS = <<~CSS
   }
   .kicker { font-family: sans-serif; font-size: 8pt; font-weight: 600;
             letter-spacing: .09em; text-transform: uppercase; color: #e3120b; margin: 0 0 6pt; }
-  h1.title { font-size: 21pt; line-height: 1.25; font-weight: 600; margin: 0 0 8pt; text-wrap: balance; }
+  h1.title { font-size: 21pt; line-height: 1.25; font-weight: 600; margin: 0 0 8pt; }
   .meta { font-family: sans-serif; font-size: 9pt; color: #6b6b6b; margin: 0 0 14pt; }
   .rule { border: 0; border-top: 3px solid #e3120b; margin: 0 0 16pt; }
   .lede { font-size: 12.5pt; line-height: 1.65; color: #3d3d3d; margin: 0 0 18pt; }
@@ -192,17 +192,15 @@ PDF_CSS = <<~CSS
        letter-spacing: .06em; text-transform: uppercase; color: #6b6b6b; }
   td { padding: 6pt 8pt; border-bottom: 1px solid #d7d3cc; vertical-align: top; }
   hr { border: 0; border-top: 1px solid #d7d3cc; margin: 16pt 0; }
+  @media screen {
+    body { max-width: 820px; margin: 0 auto; padding: 40px 28px 80px; }
+    h1.title { font-size: 28px; }
+  }
 CSS
 
-desc '把 markdown 转成 PDF：rake "pdf[docs/xxx.md]"'
-task :pdf, [:path] do |_t, args|
+def build_doc_html(path)
   require "kramdown"
   require "yaml"
-  require "tmpdir"
-
-  path = args[:path].to_s.strip
-  abort '用法：rake "pdf[docs/xxx.md]"' if path.empty?
-  abort "找不到文件：#{path}" unless File.exist?(path)
 
   raw = File.read(path)
   front, body = raw.start_with?("---") ? (raw.split(/^---\s*$/, 3)[1..2] || [nil, raw]) : [nil, raw]
@@ -223,19 +221,51 @@ task :pdf, [:path] do |_t, args|
     <style>#{PDF_CSS}</style></head><body>
     <p class="kicker">#{data['kicker'] || '悬赏'}</p>
     <h1 class="title">#{data['title']}</h1>
-    <p class="meta">#{meta}</p>
+    #{meta.empty? ? "" : "<p class=\"meta\">#{meta}</p>"}
     <hr class="rule">
     #{data['summary'] ? "<p class=\"lede\">#{data['summary']}</p>" : ''}
     #{html_body}
     </body></html>
   HTML
+  [html, path.sub(/\.md\z/, "")]
+end
 
-  out = path.sub(/\.md\z/, "") + ".pdf"
+desc '把 markdown 转成 PDF：rake "pdf[docs/xxx.md]"'
+task :pdf, [:path] do |_t, args|
+  require "tmpdir"
+  path = args[:path].to_s.strip
+  abort '用法：rake "pdf[docs/xxx.md]"' if path.empty?
+  abort "找不到文件：#{path}" unless File.exist?(path)
+
+  html, base = build_doc_html(path)
+  out = "#{base}.pdf"
   Dir.mktmpdir do |dir|
     tmp = File.join(dir, "page.html")
     File.write(tmp, html)
     ok = system("weasyprint", tmp, out)
     abort "weasyprint 失败，检查上面的输出" unless ok
   end
+  puts "已生成 #{out}（#{File.size(out) / 1024} KB）"
+end
+
+desc '同时生成 HTML 和 PDF：rake "doc[docs/xxx.md]"'
+task :doc, [:path] do |_t, args|
+  require "tmpdir"
+  path = args[:path].to_s.strip
+  abort '用法：rake "doc[docs/xxx.md]"' if path.empty?
+  abort "找不到文件：#{path}" unless File.exist?(path)
+
+  html, base = build_doc_html(path)
+  html_path = "#{base}.html"
+  File.write(html_path, html)
+
+  out = "#{base}.pdf"
+  Dir.mktmpdir do |dir|
+    tmp = File.join(dir, "page.html")
+    File.write(tmp, html)
+    ok = system("weasyprint", tmp, out)
+    abort "weasyprint 失败" unless ok
+  end
+  puts "已生成 #{html_path}（#{File.size(html_path) / 1024} KB）"
   puts "已生成 #{out}（#{File.size(out) / 1024} KB）"
 end
