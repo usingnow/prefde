@@ -310,13 +310,15 @@ pre code { font-size: 14px; }
 }
 .side__title:first-child { margin-top: 0; }
 .legend { list-style: none; margin: 0; padding: 0; }
-.legend li.legend__done::after {
-  content: "✓";
-  margin-left: auto;
-  font-size: 13px;
-  line-height: 1;
-  color: var(--red);
-}
+/* 图例：方块本身表示是否走到，颜色表示是否当期 */
+.legend .state { color: var(--ink); }
+.legend .state i { background: transparent; }
+.legend li.legend__done .state i { background: currentColor; }
+.legend li.legend__now { color: var(--red); }
+.legend li.legend__now .state { color: var(--red); font-weight: 700; }
+.legend li.legend__neg { color: var(--muted); }
+.legend li.legend__neg .state { color: var(--muted); }
+.legend li.legend__neg.legend__now .state { font-weight: 700; }
 .legend li {
   display: flex;
   align-items: center;

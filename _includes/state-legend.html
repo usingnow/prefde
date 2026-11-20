@@ -1,10 +1,16 @@
 {%- assign s = include.status -%}
-{%- assign past_open = false -%}
-{%- if s == 'judging' or s == 'awarded' -%}{%- assign past_open = true -%}{%- endif -%}
 <h2 class="side__title">状态说明</h2>
 <ul class="legend">
-  <li class="legend__done"><span class="state state--open"><i></i>征集中</span><span>报名与投稿进行中</span></li>
-  <li{% if past_open %} class="legend__done"{% endif %}><span class="state state--judging"><i></i>评审中</span><span>已截止，评审中</span></li>
-  <li{% if s == 'awarded' %} class="legend__done"{% endif %}><span class="state state--awarded"><i></i>已兑现</span><span>已选出优胜者并兑现</span></li>
-  <li{% if s == 'failed' %} class="legend__done"{% endif %}><span class="state state--failed"><i></i>未成团</span><span>未达门槛，悬赏未成立</span></li>
+  <li class="legend__done{% if s == 'open' %} legend__now{% endif %}">
+    {% include state.html status='open' %}<span>报名与投稿进行中</span>
+  </li>
+  <li class="{% if s == 'judging' or s == 'awarded' %}legend__done {% endif %}{% if s == 'judging' %}legend__now{% endif %}">
+    {% include state.html status='judging' %}<span>已截止，评审中</span>
+  </li>
+  <li class="{% if s == 'awarded' %}legend__done legend__now{% endif %}">
+    {% include state.html status='awarded' %}<span>已选出优胜者并兑现</span>
+  </li>
+  <li class="legend__neg{% if s == 'failed' %} legend__done legend__now{% endif %}">
+    {% include state.html status='failed' %}<span>未达门槛，悬赏未成立</span>
+  </li>
 </ul>
