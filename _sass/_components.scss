@@ -162,6 +162,17 @@
 
 /* ---------- 按钮 ---------- */
 .actions { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s6) 0 var(--s2); }
+.actions__link {
+  align-self: center;
+  margin-left: var(--s2);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+}
+.actions__link:hover { color: var(--red); border-bottom-color: var(--red); }
 .btn {
   display: inline-flex;
   align-items: center;
