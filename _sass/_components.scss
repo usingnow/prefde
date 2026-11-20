@@ -725,39 +725,23 @@ pre code { font-size: 14px; }
 }
 
 
-/* ---------- 首页：参与资格 ---------- */
+/* ---------- 首页：参与资格（引用块） ---------- */
 .elig {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: var(--s4);
-  margin-top: var(--s5);
-  padding-top: var(--s3);
-  border-top: 1px solid var(--rule);
+  margin: var(--s5) 0 0;
+  padding-left: var(--s4);
+  border-left: 3px solid var(--red);
 }
-.elig__label {
+.elig__main {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  color: var(--muted);
-  padding-top: 2px;
-}
-.elig__body { min-width: 0; }
-.elig__text {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.65;
   color: var(--ink);
+  font-weight: 600;
 }
 .elig__note {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.6;
   color: var(--muted);
-}
-@media (max-width: 599px) {
-  .elig { grid-template-columns: 1fr; gap: var(--s1); }
-  .elig__label { padding-top: 0; }
 }
