@@ -144,3 +144,98 @@ task :default do
   system("rake", "-T")
   puts ""
 end
+
+
+# ---------------------------------------------------------------------------
+# markdown → PDF（给同事传阅用）
+# ---------------------------------------------------------------------------
+
+PDF_CSS = <<~CSS
+  @page {
+    size: A4;
+    margin: 20mm 18mm 18mm;
+    @bottom-left  { content: "PreFDE 加油站"; font-family: sans-serif; font-size: 8pt; color: #6b6b6b; }
+    @bottom-right { content: counter(page) " / " counter(pages); font-family: sans-serif; font-size: 8pt; color: #6b6b6b; }
+  }
+  @page :first { @bottom-left { content: ""; } }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Noto Serif CJK SC", "Songti SC", serif;
+    font-size: 11pt; line-height: 1.75; color: #121212; margin: 0;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+  .kicker { font-family: sans-serif; font-size: 8pt; font-weight: 600;
+            letter-spacing: .09em; text-transform: uppercase; color: #e3120b; margin: 0 0 6pt; }
+  h1.title { font-size: 21pt; line-height: 1.25; font-weight: 600; margin: 0 0 8pt; text-wrap: balance; }
+  .meta { font-family: sans-serif; font-size: 9pt; color: #6b6b6b; margin: 0 0 14pt; }
+  .rule { border: 0; border-top: 3px solid #e3120b; margin: 0 0 16pt; }
+  .lede { font-size: 12.5pt; line-height: 1.65; color: #3d3d3d; margin: 0 0 18pt; }
+  h2 { font-size: 15pt; font-weight: 600; margin: 22pt 0 8pt; padding-top: 10pt;
+       border-top: 1px solid #d7d3cc; break-after: avoid; }
+  h3 { font-size: 11.5pt; font-weight: 600; margin: 14pt 0 6pt; break-after: avoid; }
+  p, li { orphans: 2; widows: 2; }
+  ul, ol { margin: 0 0 10pt; padding-left: 18pt; }
+  li { margin-bottom: 3pt; }
+  strong { font-weight: 600; }
+  em.hl { font-style: normal; border-bottom: 2px solid #e3120b; }
+  blockquote { margin: 12pt 0; padding-left: 10pt; border-left: 3px solid #e3120b; font-weight: 600; }
+  blockquote p { margin: 0; }
+  code { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt;
+         background: #f7f5f0; border: 1px solid #d7d3cc; padding: 0 3pt; }
+  pre { background: #f7f5f0; border: 1px solid #d7d3cc; padding: 10pt; margin: 10pt 0;
+        font-size: 9pt; line-height: 1.55; white-space: pre-wrap; break-inside: avoid; }
+  pre code { border: 0; background: none; padding: 0; font-size: 9pt; }
+  table { width: 100%; border-collapse: collapse; margin: 10pt 0 14pt;
+          font-family: sans-serif; font-size: 9.5pt; break-inside: avoid; }
+  th { text-align: left; padding: 6pt 8pt; border-top: 1px solid #121212;
+       border-bottom: 1px solid #121212; font-size: 8pt; font-weight: 600;
+       letter-spacing: .06em; text-transform: uppercase; color: #6b6b6b; }
+  td { padding: 6pt 8pt; border-bottom: 1px solid #d7d3cc; vertical-align: top; }
+  hr { border: 0; border-top: 1px solid #d7d3cc; margin: 16pt 0; }
+CSS
+
+desc '把 markdown 转成 PDF：rake "pdf[docs/xxx.md]"'
+task :pdf, [:path] do |_t, args|
+  require "kramdown"
+  require "yaml"
+  require "tmpdir"
+
+  path = args[:path].to_s.strip
+  abort '用法：rake "pdf[docs/xxx.md]"' if path.empty?
+  abort "找不到文件：#{path}" unless File.exist?(path)
+
+  raw = File.read(path)
+  front, body = raw.start_with?("---") ? (raw.split(/^---\s*$/, 3)[1..2] || [nil, raw]) : [nil, raw]
+  data = (YAML.safe_load(front.to_s, permitted_classes: [Time, Date]) || {}) rescue {}
+
+  html_body = Kramdown::Document.new(body.to_s, input: "GFM", hard_wrap: false).to_html
+
+  meta = [
+    data["reward"]   && "奖励 #{data['reward']}",
+    data["threshold"] && "门槛 #{data['threshold']} 份投稿",
+    data["deadline"] && "截止 #{data['deadline'].to_s[0, 10].tr('-', '.')}"
+  ].compact.join("　·　")
+
+  html = <<~HTML
+    <!doctype html>
+    <html lang="zh-CN"><head><meta charset="utf-8">
+    <title>#{data['title'] || File.basename(path, '.md')}</title>
+    <style>#{PDF_CSS}</style></head><body>
+    <p class="kicker">#{data['kicker'] || '悬赏'}</p>
+    <h1 class="title">#{data['title']}</h1>
+    <p class="meta">#{meta}</p>
+    <hr class="rule">
+    #{data['summary'] ? "<p class=\"lede\">#{data['summary']}</p>" : ''}
+    #{html_body}
+    </body></html>
+  HTML
+
+  out = path.sub(/\.md\z/, "") + ".pdf"
+  Dir.mktmpdir do |dir|
+    tmp = File.join(dir, "page.html")
+    File.write(tmp, html)
+    ok = system("weasyprint", tmp, out)
+    abort "weasyprint 失败，检查上面的输出" unless ok
+  end
+  puts "已生成 #{out}（#{File.size(out) / 1024} KB）"
+end
