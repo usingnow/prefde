@@ -7,12 +7,12 @@
       <span class="prow__state">{% include state.html status=x.status %}</span>
       <span class="prow__level">{% include level.html level=x.level short=true %}</span>
       <span class="prow__main">
-        <span class="prow__title">{{ x.title }}</span>
+        <span class="prow__title">{{ x.title }}{% if include.current and include.current == x.code %} <span class="prow__here">· 本页</span>{% endif %}</span>
         <span class="prow__desc">{{ x.summary | strip_html }}</span>
       </span>
       <span class="prow__reward">{{ x.reward }}</span>
     </a>
     {%- assign n = n | plus: 1 -%}
-    {%- if n >= include.limit -%}{%- break -%}{%- endif -%}
+    {%- if include.limit and n >= include.limit -%}{%- break -%}{%- endif -%}
   {%- endfor -%}
 </div>

@@ -36,23 +36,17 @@ title: 当期悬赏
     </aside>
   </div>
 
-  {%- if open_items.size > 1 %}
-  <section class="past">
-    <h2 class="past__title">还有 {{ open_items.size | minus: 1 }} 期在征集中</h2>
-    {% include bounty-rows.html items=open_items exclude=cur.code limit=5 %}
-  </section>
-  {%- endif %}
 
   {% include explain.html %}
 
   {% include lifecycle.html %}
 
-  {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" | sort: "deadline" | reverse -%}
-  {%- if closed.size > 0 %}
+  {%- assign others = site.bounties | sort: "deadline" -%}
+  {%- if others.size > 1 %}
   <section class="past">
-    <h2 class="past__title">往期</h2>
-    {% include bounty-rows.html items=closed limit=3 %}
-    <p class="past__more"><a href="{{ '/archive/' | relative_url }}">查看全部 {{ site.bounties | size }} 期 →</a></p>
+    <h2 class="past__title">其他悬赏</h2>
+    {% include bounty-rows.html items=others exclude=cur.code limit=3 %}
+    <p class="past__more"><a href="{{ '/archive/' | relative_url }}">查看全部 {{ others.size }} 期 →</a></p>
   </section>
   {%- endif %}
 </main>

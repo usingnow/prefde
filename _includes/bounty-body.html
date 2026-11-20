@@ -33,6 +33,8 @@
 
       <div class="article">{{ b.content }}</div>
 
+      {% include series.html b=b %}
+
       {%- if include.show_comments %}
       {% include comments.html %}
       {%- endif %}

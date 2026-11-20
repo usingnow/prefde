@@ -672,3 +672,13 @@ pre code { font-size: 14px; }
   letter-spacing: 0.02em;
 }
 .meta .level { font-size: 12px; }
+
+/* ---------- 系列说明 ---------- */
+.series { margin-top: var(--s8); }
+.series .past__title { text-transform: none; letter-spacing: 0.04em; font-size: 12px; }
+.prow__here {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}

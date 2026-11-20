@@ -1,0 +1,8 @@
+{%- assign s = include.b.series -%}
+{%- if s and s != "" -%}
+{%- assign items = site.bounties | where: "series", s | sort: "deadline" -%}
+<section class="past series">
+  <h2 class="past__title">本系列 · {{ s }}（共 {{ items.size }} 题）</h2>
+  {% include bounty-rows.html items=items current=include.b.code %}
+</section>
+{%- endif -%}
