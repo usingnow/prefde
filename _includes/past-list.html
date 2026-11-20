@@ -2,7 +2,8 @@
 {%- assign n = 0 -%}
 <div class="past-list">
   {%- for x in all -%}
-    {%- if x.code == include.exclude -%}{%- continue -%}{%- endif -%}
+    {%- if x.status == "open" -%}{%- continue -%}{%- endif -%}
+    {%- if include.exclude and x.code == include.exclude -%}{%- continue -%}{%- endif -%}
     <a class="prow" href="{{ x.url | relative_url }}">
       <span class="prow__date">{{ x.opens | date: "%Y.%m.%d" }}</span>
       <span class="prow__state">{% include state.html status=x.status %}</span>

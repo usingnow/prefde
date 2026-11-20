@@ -2,7 +2,7 @@
 layout: default
 title: 当期悬赏
 ---
-{%- assign cur = site.bounties | where: "status", "open" | sort: "opens" | last -%}
+{%- assign cur = site.bounties | where: "status", "open" | sort: "deadline" | first -%}
 {%- if cur == nil -%}{%- assign cur = site.bounties | sort: "opens" | last -%}{%- endif -%}
 {%- assign now = site.time | date: "%s" | plus: 0 -%}
 {%- assign dl = cur.deadline | date: "%s" | plus: 0 -%}
@@ -38,9 +38,12 @@ title: 当期悬赏
 
   {% include lifecycle.html %}
 
+  {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" -%}
+  {%- if closed.size > 0 %}
   <section class="past">
     <h2 class="past__title">往期</h2>
-    {% include past-list.html exclude=cur.code limit=3 %}
+    {% include past-list.html limit=3 %}
     <p class="past__more"><a href="{{ '/archive/' | relative_url }}">查看全部 {{ site.bounties | size }} 期 →</a></p>
   </section>
+  {%- endif %}
 </main>
