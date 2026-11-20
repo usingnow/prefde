@@ -682,3 +682,20 @@ pre code { font-size: 14px; }
   font-weight: 400;
   color: var(--muted);
 }
+
+
+/* ---------- 群二维码 ---------- */
+.qr { margin: 0; }
+.qr img {
+  display: block;
+  width: 200px;
+  height: auto;
+  border: 1px solid var(--rule);
+}
+.qr figcaption {
+  margin-top: var(--s2);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--muted);
+}
