@@ -685,15 +685,17 @@ pre code { font-size: 14px; }
 
 
 /* ---------- 群二维码 ---------- */
-.qr { margin: 0; }
+.qr { margin: 0; text-align: center; }
 .qr img {
   display: block;
   width: 200px;
   height: auto;
+  margin: 0 auto;
   border: 1px solid var(--rule);
 }
 .qr figcaption {
   margin-top: var(--s2);
+  text-wrap: balance;
   font-family: var(--font-sans);
   font-size: 12px;
   line-height: 1.65;
