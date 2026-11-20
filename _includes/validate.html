@@ -14,6 +14,12 @@
   {%- assign problems = problems | push: msg -%}
 {%- endif -%}
 
+{%- assign same_url = site.bounties | where: "url", b.url -%}
+{%- if same_url.size > 1 -%}
+  {%- assign msg = "permalink 和其他期重复（" | append: b.url | append: "），两期会互相覆盖；复制文件时记得改或删掉 permalink" -%}
+  {%- assign problems = problems | push: msg -%}
+{%- endif -%}
+
 {%- assign lv = b.level | plus: 0 -%}
 {%- unless lv == 1 or lv == 2 or lv == 3 -%}
   {%- assign msg = "level 只能是 1 / 2 / 3，当前是「" | append: b.level | append: "」" -%}
