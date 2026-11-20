@@ -41,7 +41,7 @@
     </article>
 
     <aside class="col-side">
-      {% include state-legend.html %}
+      {% include state-legend.html status=b.status %}
 
       {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" -%}
       {%- if closed.size > 0 %}
