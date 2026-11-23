@@ -468,6 +468,7 @@ pre code { font-size: 14px; }
   color: var(--muted);
 }
 .site-foot p { margin: 0 0 4px; }
+.site-foot__org { margin-top: var(--s2) !important; }
 .site-foot__icp { font-size: 12px; margin-top: var(--s2) !important; }
 .site-foot a { color: var(--muted); }
 .site-foot a:hover { color: var(--red); }

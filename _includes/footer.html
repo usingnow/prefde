@@ -2,6 +2,7 @@
   <div class="wrap">
     <p>{{ site.title }} · {{ site.tagline }}</p>
     <p>内容以 <a href="{{ site.repo_url }}">{{ site.repo }}</a> 为准 · <a href="{{ '/feed.xml' | relative_url }}">RSS</a></p>
+    <p class="site-foot__org">© 2010–2026 <a href="https://usingnow.tech" target="_blank" rel="noopener">采恪 · UsingNow</a></p>
     {%- if site.icp %}
     <p class="site-foot__icp"><a href="{{ site.icp_url | default: 'https://beian.miit.gov.cn/' }}" target="_blank" rel="noopener">{{ site.icp }}</a></p>
     {%- endif %}
