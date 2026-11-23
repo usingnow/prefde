@@ -37,6 +37,10 @@ share:
   qr_image: "/assets/img/wechat-group.png"
   qr_caption: "扫码加管理员，备注学校+专业，拉你进群"
 
+# ICP 备案号（显示在页脚）
+icp: "沪ICP备19023170号-1"
+icp_url: "https://beian.miit.gov.cn/"
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap
