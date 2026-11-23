@@ -22,10 +22,27 @@
 
       {% include bounty-metrics.html b=b left=left pct=pct todo=todo %}
 
+      {%- if b.status == 'draft' %}
+      <div class="warn">
+        <strong>尚未发布</strong>{% if b.opens %} · 计划 {{ b.opens | date: "%Y.%m.%d %H:%M" }} 发布{% endif %}。现在只能预览，报名和投稿尚未开放。
+      </div>
+      {%- endif %}
+
       {%- if b.status == 'open' %}
       <div class="actions">
         <a class="btn btn--primary" target="_blank" rel="noopener" href="{{ signup_url }}">我要报名</a>
+        {%- assign stub_url = '/assets/submissions/' | append: b.code | append: '.md' -%}
+        {%- assign stub = site.pages | where: "url", stub_url | first -%}
+        {%- if stub %}
+        <a class="btn btn--ghost" href="{{ stub_url | relative_url }}" download="{{ b.code }}-投稿模板.md">下载模板</a>
+        {%- endif %}
+        {%- assign share_path = '/assets/img/share/' | append: b.code | append: '.png' -%}
+        {%- assign share_file = site.static_files | where: "path", share_path | first -%}
+        {%- if share_file %}
+        <a class="btn btn--ghost" href="{{ share_path | relative_url }}" target="_blank" rel="noopener" download="{{ b.code }}-分享图.png">分享图</a>
+        {%- endif %}
         <a class="btn btn--ghost" href="{{ site.repo_url }}/pulls?q=is%3Apr+label%3A%E6%8A%95%E7%A8%BF">查看投稿</a>
+        <a class="actions__link" href="{{ '/submit/' | relative_url }}">投稿指南 →</a>
       </div>
       {%- elsif b.status == 'awarded' %}
       <p class="verdict">优胜者 <strong>@{{ b.winner }}</strong> · <a href="{{ b.payout }}">兑现记录</a></p>
@@ -35,7 +52,7 @@
 
       {% include series.html b=b %}
 
-      {%- if include.show_comments %}
+      {%- if include.show_comments and b.status != 'draft' %}
       {% include comments.html %}
       {%- endif %}
     </article>
@@ -43,7 +60,7 @@
     <aside class="col-side">
       {% include state-legend.html status=b.status %}
 
-      {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" -%}
+      {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" | where_exp: "x", "x.status != 'draft'" -%}
       {%- if closed.size > 0 %}
       <h2 class="side__title">往期</h2>
       {%- assign recent = closed | sort: "deadline" | reverse -%}

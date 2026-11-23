@@ -1,0 +1,363 @@
+---
+layout: default
+title: 如何交作品
+permalink: /submit/
+---
+<main class="wrap page">
+  <p class="kicker">指南</p>
+  <h1 class="display display--sm">如何交作品</h1>
+  <p class="meta">一步一步，全程在浏览器里完成 · 不用装 git，也不用记命令</p>
+  <hr class="rule-red">
+
+  <div class="grid">
+    <article class="col-main">
+      <div class="article article--plain">
+        <p class="lede">你交的不是代码，是一份「作品说明 + 链接」。代码放在你自己的公开仓库里；投稿只是在我们的仓库里新建一个 md 文件，提一个 Pull Request（简称 PR）。</p>
+
+        <div class="warn">
+          <strong>先记住三件事</strong>
+          <ul>
+            <li>投稿 = 提 PR。不是发邮件，不是传网盘，不是交压缩包。</li>
+            <li>文件路径固定：<code>_submissions/期号/你的GitHub用户名.md</code></li>
+            <li>正文只放链接和说明。图片、视频、压缩包一律给外链。</li>
+          </ul>
+        </div>
+
+        <h2>开始之前，确认你有</h2>
+
+        <table>
+          <thead>
+            <tr><th>东西</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GitHub 账号</td><td>免费注册，五分钟。它是你唯一的身份，报名和投稿都用它。</td></tr>
+            <tr><td>一个公开仓库</td><td>放你的代码和一份能跑起来的 README。仓库必须是 public。</td></tr>
+            <tr><td>本期期号</td><td>形如 <code>2026-11-19-b1</code>，在悬赏页标题下方。</td></tr>
+            <tr><td>演示地址（可选）</td><td>GitHub Pages、Vercel、一段录屏都行。没有就写「无」。</td></tr>
+          </tbody>
+        </table>
+
+        <h2>总览：五步</h2>
+
+        <ol>
+          <li>把作品放进你自己的公开仓库</li>
+          <li>打开本站仓库，fork 一份到你的账号下</li>
+          <li>新建 <code>_submissions/期号/用户名.md</code></li>
+          <li>提交，开一个 Pull Request</li>
+          <li>等评审，按意见修改</li>
+        </ol>
+
+        <p>下面每一步都有截图位。图还没补上时，虚线框里写的是「这张图应该拍什么」。</p>
+
+        <h2>第一步 · 把作品放进你自己的公开仓库</h2>
+
+        <p>本站仓库<strong>不收代码</strong>。你的代码、数据、脚本，全部放在你自己的 GitHub 仓库里。仓库里至少要有三样东西：</p>
+
+        <ul>
+          <li>能跑的代码（或数据、文档，按题目要求）</li>
+          <li>一份 README：三分钟能让人跑起来</li>
+          <li>一句说明：你做了什么、怎么验证</li>
+        </ul>
+
+        <p>仓库要是 <strong>public</strong>。评审打不开的仓库，等于没交。</p>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 1 · 待补</p>
+          <p class="shot__desc">一个公开仓库的首页：能看到 README、代码文件和右侧的 About 描述。建议圈出仓库名和 <strong>Public</strong> 标记。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/01-repo.png' | relative_url }}" alt="一个公开 GitHub 仓库的首页" loading="lazy">
+          <figcaption>你的作品放在自己的公开仓库里，README 写清怎么跑。</figcaption>
+          -->
+        </figure>
+
+        <h2>第二步 · fork 本站仓库</h2>
+
+        <p>打开本站仓库：</p>
+
+        <pre><code>{{ site.repo_url }}</code></pre>
+
+        <p>点右上角的 <strong>Fork</strong>，再点 <strong>Create fork</strong>。等几秒，你就有了自己的一份副本，地址是：</p>
+
+        <pre><code>https://github.com/你的用户名/{{ site.repo | split: "/" | last }}</code></pre>
+
+        <p>后面的新建文件、提交，都在你自己的这份副本里做。PR 会自动指回本站仓库。</p>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 2 · 待补</p>
+          <p class="shot__desc">本站仓库首页右上角。<strong>Fork</strong> 按钮旁边是 Star 和 Watch。建议把 Fork 按钮圈出来。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/02-fork.png' | relative_url }}" alt="GitHub 仓库右上角的 Fork 按钮" loading="lazy">
+          <figcaption>点右上角 Fork，复制一份到你自己的账号下。</figcaption>
+          -->
+        </figure>
+
+        <h2>第三步 · 新建投稿文件</h2>
+
+        <p>在你的副本里，点进 <code>_submissions</code> 目录，然后点右上角的 <strong>Add file → Create new file</strong>。</p>
+
+        <p>文件名框里输入（斜杠会自动建目录）：</p>
+
+        <pre><code>2026-11-19-b1/你的GitHub用户名.md</code></pre>
+
+        <p>把 <code>2026-11-19-b1</code> 换成你那一期的期号，把「你的GitHub用户名」换成你的真实用户名。例如：</p>
+
+        <pre><code>2026-11-19-b1/linxiao.md</code></pre>
+
+        <p>三个硬规则，错一个都可能不算投稿：</p>
+
+        <table>
+          <thead>
+            <tr><th>规则</th><th>为什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>目录名 = 期号，一字不差</td><td>管理员按目录找投稿，写错就找不到</td></tr>
+            <tr><td>文件名 = 你的 GitHub 用户名</td><td>唯一的分身识别方式，天然去重</td></tr>
+            <tr><td>扩展名是 <code>.md</code></td><td>Markdown，纯文本，能直接看 diff</td></tr>
+          </tbody>
+        </table>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 3 · 待补</p>
+          <p class="shot__desc"><strong>Add file → Create new file</strong> 菜单，以及文件名输入框里填好的完整路径。建议把斜杠建目录的效果拍出来。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/03-filename.png' | relative_url }}" alt="新建文件时在文件名框输入带斜杠的路径" loading="lazy">
+          <figcaption>文件名里带斜杠，GitHub 会自动创建对应目录。</figcaption>
+          -->
+        </figure>
+
+        <h2>第四步 · 写投稿内容</h2>
+
+        <p><strong>更省事的做法：</strong>回到你那一期的悬赏页，点 <strong>下载模板</strong>。下载下来的 md 已经填好期号、题目、奖励、截止时间、评审标准和本期交付清单，你只需要补自己的仓库链接和说明。</p>
+
+        <p>也可以直接复制下面的模板，粘进编辑区，换成你自己的内容。它是「说明书」，不是代码本体。</p>
+
+        <pre><code># 2026-11-19-b1 投稿 · linxiao
+
+- 期号：2026-11-19-b1
+- 作品仓库：https://github.com/linxiao/odoo-install-diff
+- 演示地址：https://linxiao.github.io/odoo-install-diff/
+- 一句话说明：覆盖 8 个主题、24 条差异，每条都附官方文档引用。
+
+## 我做了什么
+
+用脚本抓取 Odoo 18 / 20 两份安装文档，人工核对后整理成 diff.json，
+再生成一份可读的 diff.md。
+
+## 怎么跑起来 / 怎么验证
+
+    git clone https://github.com/linxiao/odoo-install-diff
+    cd odoo-install-diff
+    python3 -m json.tool diff.json
+    python3 check_quotes.py
+
+## 复盘
+
+- 两版文档的目录结构不一样，18 的安装页拆得更细，20 合并了。
+- 踩坑：中英文文档混用，引用时容易串，最后统一用英文页。
+
+## 自查
+
+- [x] 文件名 = 我的 GitHub 用户名
+- [x] 没有提交二进制文件
+- [x] 作品为本人原创</code></pre>
+
+        <p><strong>不要做的事：</strong></p>
+
+        <table>
+          <thead>
+            <tr><th>不要</th><th>为什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>把 zip、图片、视频放进 PR</td><td>仓库有 1 GB 上限，二进制也没法看 diff</td></tr>
+            <tr><td>只写「代码在网盘」</td><td>评审打不开，等于没交</td></tr>
+            <tr><td>提交 <code>main.py</code> 这类代码文件</td><td>代码应该在你自己的仓库，这里只放说明</td></tr>
+            <tr><td>文件名写成 <code>submission.md</code></td><td>无法去重，也无法确认是谁交的</td></tr>
+          </tbody>
+        </table>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 4 · 待补</p>
+          <p class="shot__desc">文件编辑区里粘贴好模板的样子，能看到顶部的标题和下面的仓库链接。建议把「作品仓库」那一行圈出来。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/04-content.png' | relative_url }}" alt="在 GitHub 网页编辑器里填写投稿内容" loading="lazy">
+          <figcaption>正文只放说明和链接，代码留在你自己的仓库。</figcaption>
+          -->
+        </figure>
+
+        <h2>第五步 · 提交并开 Pull Request</h2>
+
+        <p>页面往下拉，点绿色的 <strong>Commit changes</strong>。在弹出的框里：</p>
+
+        <ol>
+          <li>提交说明随便写，比如 <code>投稿 2026-11-19-b1</code></li>
+          <li>选 <strong>Create a new branch for this commit and start a pull request</strong></li>
+          <li>分支名保持默认，或写 <code>submission/2026-11-19-b1</code></li>
+          <li>点 <strong>Propose changes</strong></li>
+        </ol>
+
+        <p>接下来是开 PR 的页面。确认两件事：</p>
+
+        <table>
+          <thead>
+            <tr><th>字段</th><th>应该是什么</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>base repository</td><td><code>{{ site.repo }}</code>，分支 <code>{{ site.branch }}</code></td></tr>
+            <tr><td>head repository</td><td><code>你的用户名/{{ site.repo | split: "/" | last }}</code>，分支是你刚建的那条</td></tr>
+          </tbody>
+        </table>
+
+        <p>标题建议写成：</p>
+
+        <pre><code>[投稿] 2026-11-19-b1 · linxiao</code></pre>
+
+        <p>正文里仓库自带的模板会自动出现，把四个字段填上，勾选自查，然后点 <strong>Create pull request</strong>。</p>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 5 · 待补</p>
+          <p class="shot__desc"><strong>Commit changes</strong> 对话框，选中 <strong>Create a new branch for this commit and start a pull request</strong> 的那一刻。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/05-commit.png' | relative_url }}" alt="Commit changes 对话框中选择新建分支并开 PR" loading="lazy">
+          <figcaption>选「新建分支并开 PR」，不要直接提交到 main。</figcaption>
+          -->
+        </figure>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 6 · 待补</p>
+          <p class="shot__desc">开 PR 的页面：左边 base 是本站仓库，右边 head 是你的副本；下面是标题和正文。建议把 base/head 那一行圈出来。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/06-pull-request.png' | relative_url }}" alt="创建 Pull Request 时确认 base 和 head 仓库" loading="lazy">
+          <figcaption>确认改动是从你的副本，合向本站仓库。</figcaption>
+          -->
+        </figure>
+
+        <h2>第六步 · 等评审，按意见改</h2>
+
+        <p>PR 创建后，你会看到三样东西：</p>
+
+        <ul>
+          <li><strong>Conversation</strong>：评审在这里留言，你有回复会收到 GitHub 邮件</li>
+          <li><strong>Files changed</strong>：只显示你新增的那个 md，代码不在里面，这是正常的</li>
+          <li><strong>Labels</strong>：管理员会打上「投稿」标签，方便统一查看</li>
+        </ul>
+
+        <p>截止前想改，<strong>不要新开 PR</strong>。在你的分支上再提交一次，PR 会自动更新。网页上的做法是：</p>
+
+        <ol>
+          <li>打开 PR，点 <strong>Files changed</strong></li>
+          <li>点文件右上角的铅笔图标</li>
+          <li>改完，提交到<strong>同一条分支</strong></li>
+        </ol>
+
+        <p>截止后，状态会变成「评审中」，不再接受新的投稿。评审意见仍然可以在 PR 里回复。</p>
+
+        <figure class="shot shot--todo">
+          <p class="shot__tag">截图 7 · 待补</p>
+          <p class="shot__desc">一个已经创建好的投稿 PR：标题、正文模板、右侧的 Labels 和 Reviewers。建议把「投稿」标签圈出来。</p>
+          <!-- 补图时把上面两行替换成：
+          <img src="{{ '/assets/img/guide/07-review.png' | relative_url }}" alt="创建好的投稿 Pull Request 页面" loading="lazy">
+          <figcaption>PR 就是你的投稿记录，评审和修改都在这里发生。</figcaption>
+          -->
+        </figure>
+
+        <h2>用命令行提交（可选）</h2>
+
+        <p>如果你已经会用 git，可以跳过网页步骤：</p>
+
+        <pre><code># 1. 先在网页上 fork 本站仓库
+# 2. clone 你自己的副本
+git clone https://github.com/你的用户名/{{ site.repo | split: "/" | last }}.git
+cd {{ site.repo | split: "/" | last }}
+
+# 3. 开分支
+git checkout -b submission/2026-11-19-b1
+
+# 4. 新建文件
+mkdir -p _submissions/2026-11-19-b1
+$EDITOR _submissions/2026-11-19-b1/你的用户名.md
+
+# 5. 提交并推送
+git add _submissions/2026-11-19-b1/你的用户名.md
+git commit -m "投稿 2026-11-19-b1"
+git push -u origin submission/2026-11-19-b1</code></pre>
+
+        <p>push 完，终端会给一个 <strong>Compare &amp; pull request</strong> 链接，点进去创建 PR。</p>
+
+        <h2>常见错误</h2>
+
+        <table>
+          <thead>
+            <tr><th>现象</th><th>原因</th><th>怎么改</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>管理员说没收到</td><td>期号目录写错，或 PR 提错了仓库</td><td>对照路径，确认 base 是 <code>{{ site.repo }}:{{ site.branch }}</code></td></tr>
+            <tr><td>「查看投稿」列表是空的</td><td>PR 还没被打上「投稿」标签</td><td>等管理员补打，或在 PR 里 @ 管理员</td></tr>
+            <tr><td>PR 里看不到代码</td><td>设计如此，代码在你的仓库</td><td>在正文里放仓库链接</td></tr>
+            <tr><td>文件被要求改</td><td>提交了二进制，或只写了网盘链接</td><td>改成外链，重新提交</td></tr>
+            <tr><td>评审说打不开</td><td>你的仓库是 private</td><td>改成 public，或给评审加访问权限</td></tr>
+            <tr><td>截止后被拒</td><td>提交时间晚于截止时间</td><td>无法补救，下次赶早</td></tr>
+          </tbody>
+        </table>
+
+        <h2>提交前自查</h2>
+
+        <ul>
+          <li>路径是 <code>_submissions/期号/你的GitHub用户名.md</code></li>
+          <li>文件名和你的 GitHub 用户名完全一致（大小写也要对）</li>
+          <li>正文里有作品仓库链接，且点得开</li>
+          <li>仓库是 public</li>
+          <li>没有提交 zip、图片、视频</li>
+          <li>PR 的 base 是本站仓库，不是你的副本</li>
+        </ul>
+
+        <h2>还有问题</h2>
+
+        <p>先看 <a href="{{ '/faq/' | relative_url }}">常见问题</a>。如果还是卡住，在你那一期的报名 Issue 下回复，或加首页的企业微信，注明「投稿卡住」，把 PR 链接一起发过来。</p>
+      </div>
+    </article>
+
+    <aside class="col-side">
+      <h2 class="side__title">快速入口</h2>
+      <ul class="legend">
+        {%- assign cur = site.bounties | where: "status", "open" | sort: "deadline" | first -%}
+        {%- if cur %}
+        {%- assign stub_url = '/assets/submissions/' | append: cur.code | append: '.md' -%}
+        {%- assign stub = site.pages | where: "url", stub_url | first -%}
+        {%- if stub %}
+        <li><a href="{{ stub_url | relative_url }}" download="{{ cur.code }}-投稿模板.md">下载本期模板（{{ cur.code }}）</a></li>
+        {%- endif %}
+        {%- endif %}
+        <li><a href="{{ site.repo_url }}">打开仓库</a></li>
+        <li><a href="{{ site.repo_url }}/tree/{{ site.branch }}/_submissions">_submissions 目录</a></li>
+        <li><a href="{{ site.repo_url }}/new/{{ site.branch }}">在 GitHub 新建文件</a></li>
+        <li><a href="{{ '/faq/' | relative_url }}">常见问题</a></li>
+      </ul>
+
+      <h2 class="side__title">记住这个路径</h2>
+      <pre><code>_submissions/
+  2026-11-19-b1/
+    linxiao.md</code></pre>
+
+      <h2 class="side__title">一句话</h2>
+      <p class="note">代码放你那边，说明放我们这边。PR 只是那根线。</p>
+    </aside>
+  </div>
+</main>
+
+<!--
+  截图清单（不显示在页面上，补图时按这个拍）
+
+  1. 01-repo.png       学生自己的公开仓库首页，有 README 和 Public 标记
+  2. 02-fork.png       本站仓库右上角 Fork 按钮
+  3. 03-filename.png   Add file → Create new file，文件名框输入带斜杠的路径
+  4. 04-content.png    编辑区粘贴好投稿模板
+  5. 05-commit.png     Commit changes 对话框，选中新建分支并开 PR
+  6. 06-pull-request.png  开 PR 页面，base / head 的对比
+  7. 07-review.png     创建好的 PR，右侧 Labels / Reviewers
+
+  放到 assets/img/guide/，然后把对应 <figure> 里的两行占位
+  替换成注释里给出的 <img> + <figcaption>。
+
+  建议：截图宽度 1200–1600px，裁掉浏览器边框，只留 GitHub 内容区；
+  需要强调的按钮用红框或箭头标一下，和站点主色一致。
+-->

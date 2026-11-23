@@ -3,15 +3,28 @@ layout: default
 title: 归档
 permalink: /archive/
 ---
+{%- assign published = site.bounties | where_exp: "x", "x.status != 'draft'" | sort: "opens" | reverse -%}
+{%- assign drafts = site.bounties | where: "status", "draft" | sort: "opens" -%}
 <main class="wrap page">
   <p class="kicker">全部</p>
   <h1 class="display display--sm">归档</h1>
-  <p class="meta">{{ site.bounties | size }} 期 · 按发布时间倒序</p>
+  <p class="meta">{{ published.size }} 期已发布{% if drafts.size > 0 %} · {{ drafts.size }} 期即将发布{% endif %} · 按发布时间倒序</p>
   <hr class="rule-red">
   <div class="cards">
-    {%- assign all = site.bounties | sort: "opens" | reverse -%}
-    {%- for b in all -%}
+    {%- for b in published -%}
       {% include bounty-card.html b=b %}
     {%- endfor %}
   </div>
+
+  {%- if drafts.size > 0 %}
+  <section class="past">
+    <h2 class="past__title">即将发布</h2>
+    <p class="meta">题目已公开，报名和投稿尚未开放。</p>
+    <div class="cards">
+      {%- for b in drafts -%}
+        {% include bounty-card.html b=b %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
 </main>

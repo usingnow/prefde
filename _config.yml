@@ -32,6 +32,11 @@ giscus:
   category: "Announcements"
   category_id: "DIC_kwDOVzH7A84DLbjo"        # DIC_xxxxxxxx
 
+# 分享图：右下角二维码用的图片和说明
+share:
+  qr_image: "/assets/img/wechat-group.png"
+  qr_caption: "扫码加管理员，备注学校+专业，拉你进群"
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap

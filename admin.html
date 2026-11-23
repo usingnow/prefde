@@ -19,12 +19,15 @@ noindex: true
   </div>
   {%- endif %}
 
+  <p class="table-hint">表格较宽，手机上可左右滑动 →</p>
+  <div class="table-wrap">
   <table class="table">
     <thead>
       <tr>
         <th>期号</th>
         <th>题目</th>
         <th>状态</th>
+        <th>发布 / 计划</th>
         <th class="num">报名</th>
         <th class="num">投稿</th>
         <th>操作</th>
@@ -37,6 +40,7 @@ noindex: true
         <td class="mono">{{ b.code }}</td>
         <td>{{ b.title }}</td>
         <td>{% include state.html status=b.status %}</td>
+        <td class="mono">{{ b.opens | date: "%Y.%m.%d" }}</td>
         <td class="num">{{ b.signups_shown }}</td>
         <td class="num">{{ b.submissions_shown }} / {{ b.threshold }}</td>
         <td class="ops">
@@ -48,8 +52,9 @@ noindex: true
     {%- endfor %}
     </tbody>
   </table>
+  </div>
 
-  <p class="note">报名走 Issue，投稿走 PR。状态字段只允许 <code>open</code> / <code>judging</code> / <code>awarded</code> / <code>failed</code>。</p>
+  <p class="note">报名走 Issue，投稿走 PR。状态允许 <code>draft</code> / <code>open</code> / <code>judging</code> / <code>awarded</code> / <code>failed</code>。「发布 / 计划」列就是 <code>opens</code>：草稿时是计划发布时间，点「编辑」可以改。</p>
 </main>
 {% else %}
 <main class="wrap page">

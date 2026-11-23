@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { width: 1080px; height: 1440px; }
+  body {
+    width: 1080px; height: 1440px; overflow: hidden;
+    background: #f7f5f0;
+    color: #121212;
+    font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "Source Han Serif", Georgia, serif;
+    padding: 64px 72px 56px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 18px; }
+  .brand svg { width: 64px; height: 64px; display: block; }
+  .brand__name {
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 26px; font-weight: 600; letter-spacing: .02em;
+  }
+  .kicker {
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; font-weight: 600; letter-spacing: .14em;
+    color: #e3120b; text-transform: uppercase;
+  }
+  .rule { height: 4px; background: #e3120b; margin: 36px 0 40px; }
+
+  .meta {
+    display: flex; align-items: center; gap: 16px;
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 20px; color: #6b6b6b;
+  }
+  .level {
+    display: inline-block; background: #121212; color: #fff;
+    padding: 3px 12px; font-size: 17px; font-weight: 600; letter-spacing: .04em;
+  }
+
+  h1 { margin: 26px 0 24px; font-size: 76px; line-height: 1.16; font-weight: 600; letter-spacing: -0.01em; }
+  h1.long { font-size: 62px; line-height: 1.2; }
+  .summary { margin: 0 0 40px; font-size: 32px; line-height: 1.55; color: #3d3d3d; }
+
+  .stats {
+    display: flex; gap: 56px; align-items: flex-end;
+    padding: 28px 0;
+    border-top: 1px solid #d7d3cc;
+    border-bottom: 1px solid #d7d3cc;
+  }
+  .stat__label {
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px; font-weight: 600; letter-spacing: .12em;
+    color: #6b6b6b; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .stat__value { font-size: 68px; font-weight: 600; line-height: 1; }
+  .stat__value--sm { font-size: 40px; line-height: 1.2; }
+
+  .deliverables { margin-top: 44px; }
+  .deliverables__label {
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px; font-weight: 600; letter-spacing: .12em;
+    color: #6b6b6b; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .deliverables__list { margin: 0; padding: 0; list-style: none; }
+  .deliverables__list li {
+    position: relative; padding-left: 26px; margin-bottom: 10px;
+    font-size: 26px; line-height: 1.45; color: #121212;
+  }
+  .deliverables__list li::before {
+    content: "·"; position: absolute; left: 4px;
+    color: #e3120b; font-weight: 600;
+  }
+
+  .bottom { margin-top: auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+  .qr { background: #fff; border: 1px solid #d7d3cc; padding: 18px; display: flex; align-items: center; gap: 22px; }
+  .qr img { width: 280px; height: 280px; display: block; }
+  .qr__text { width: 240px; }
+  .qr__title {
+    margin: 0 0 10px;
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 24px; font-weight: 600;
+  }
+  .qr__desc {
+    margin: 0;
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; line-height: 1.55; color: #6b6b6b;
+  }
+  .url {
+    text-align: right;
+    font-family: Inter, "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; line-height: 1.7; color: #6b6b6b;
+  }
+  .url strong { display: block; font-size: 22px; color: #121212; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">
+      {{LOGO_SVG}}
+      <span class="brand__name">PreFDE 加油站</span>
+    </div>
+    <span class="kicker">{{KICKER}}</span>
+  </div>
+
+  <div class="rule"></div>
+
+  <div class="meta">
+    <span class="level">{{LEVEL}}</span>
+    <span>{{SERIES}}</span>
+  </div>
+
+  <h1 class="{{TITLE_CLASS}}">{{TITLE}}</h1>
+  <p class="summary">{{SUMMARY}}</p>
+
+  <div class="stats">
+    <div>
+      <div class="stat__label">奖励</div>
+      <div class="stat__value">{{REWARD}}</div>
+    </div>
+    <div>
+      <div class="stat__label">截止</div>
+      <div class="stat__value stat__value--sm">{{DEADLINE}}</div>
+    </div>
+    <div>
+      <div class="stat__label">成团</div>
+      <div class="stat__value stat__value--sm">{{PROGRESS}}</div>
+    </div>
+  </div>
+
+  <div class="deliverables">
+    <div class="deliverables__label">{{DELIVERABLES_TITLE}}</div>
+    <ul class="deliverables__list">{{DELIVERABLES}}</ul>
+  </div>
+
+  <div class="bottom">
+    <div class="qr">
+      <img src="{{QR_IMAGE}}" alt="扫码加群">
+      <div class="qr__text">
+        <p class="qr__title">扫码加群</p>
+        <p class="qr__desc">{{QR_CAPTION}}</p>
+      </div>
+    </div>
+    <div class="url">
+      <strong>{{URL}}</strong>
+      {{CODE}}
+    </div>
+  </div>
+</body>
+</html>

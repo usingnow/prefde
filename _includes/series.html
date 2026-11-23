@@ -1,8 +1,9 @@
 {%- assign s = include.b.series -%}
 {%- if s and s != "" -%}
-{%- assign items = site.bounties | where: "series", s | sort: "deadline" -%}
+{%- assign items = site.bounties | where: "series", s | sort: "series_order" -%}
+{%- assign drafts = items | where: "status", "draft" -%}
 <section class="past series">
-  <h2 class="past__title">本系列 · {{ s }}（共 {{ items.size }} 题）</h2>
+  <h2 class="past__title">本系列 · {{ s }}（共 {{ items.size }} 题{% if drafts.size > 0 %}，{{ drafts.size }} 题尚未发布{% endif %}）</h2>
   {% include bounty-rows.html items=items current=include.b.code %}
 </section>
 {%- endif -%}

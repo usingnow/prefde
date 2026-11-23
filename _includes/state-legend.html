@@ -1,7 +1,10 @@
 {%- assign s = include.status -%}
 <h2 class="side__title">状态说明</h2>
 <ul class="legend">
-  <li class="legend__done{% if s == 'open' %} legend__now{% endif %}">
+  <li class="{% if s != 'draft' %}legend__done {% endif %}{% if s == 'draft' %}legend__now{% endif %}">
+    {% include state.html status='draft' %}<span>题目可预览，报名和投稿未开放</span>
+  </li>
+  <li class="{% unless s == 'draft' %}legend__done {% endunless %}{% if s == 'open' %}legend__now{% endif %}">
     {% include state.html status='open' %}<span>报名与投稿进行中</span>
   </li>
   <li class="{% if s == 'judging' or s == 'awarded' %}legend__done {% endif %}{% if s == 'judging' %}legend__now{% endif %}">

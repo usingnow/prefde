@@ -1,11 +1,11 @@
 {%- assign b = include.b -%}
 {%- assign problems = "" | split: "" -%}
-{%- assign ok_status = "open,judging,awarded,failed" | split: "," -%}
+{%- assign ok_status = "draft,open,judging,awarded,failed" | split: "," -%}
 {%- assign fname = b.path | split: "/" | last -%}
 {%- assign expected_code = fname | remove: ".md" -%}
 
 {%- unless ok_status contains b.status -%}
-  {%- assign msg = "status 只能是 open / judging / awarded / failed，当前是「" | append: b.status | append: "」" -%}
+  {%- assign msg = "status 只能是 draft / open / judging / awarded / failed，当前是「" | append: b.status | append: "」" -%}
   {%- assign problems = problems | push: msg -%}
 {%- endunless -%}
 
@@ -32,10 +32,47 @@
   {%- assign problems = problems | push: msg -%}
 {%- endunless -%}
 
+{%- if b.opens == nil or b.opens == "" -%}
+  {%- assign problems = problems | push: "opens 不能为空（发布时间 / 计划发布时间）" -%}
+{%- else -%}
+  {%- assign otz = b.opens | date: "%z" -%}
+  {%- unless otz == "+0800" -%}
+    {%- assign msg = "opens 的时区应为 +08:00，当前是「" | append: otz | append: "」" -%}
+    {%- assign problems = problems | push: msg -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{%- if b.opens and b.deadline -%}
+  {%- assign opens_ts = b.opens | date: "%s" | plus: 0 -%}
+  {%- assign deadline_ts = b.deadline | date: "%s" | plus: 0 -%}
+  {%- if deadline_ts <= opens_ts -%}
+    {%- assign problems = problems | push: "deadline 必须晚于 opens" -%}
+  {%- endif -%}
+{%- endif -%}
+
 {%- if b.title == nil or b.title == "" -%}{%- assign problems = problems | push: "title 不能为空" -%}{%- endif -%}
 {%- if b.summary == nil or b.summary == "" -%}{%- assign problems = problems | push: "summary 不能为空" -%}{%- endif -%}
 {%- if b.reward == nil or b.reward == "" -%}{%- assign problems = problems | push: "reward 不能为空" -%}{%- endif -%}
 {%- if b.threshold == nil -%}{%- assign problems = problems | push: "threshold 必须是数字，不要加引号或「份」" -%}{%- endif -%}
+{%- assign th = b.threshold | plus: 0 -%}
+{%- unless th > 0 -%}{%- assign problems = problems | push: "threshold 必须是大于 0 的整数" -%}{%- endunless -%}
+
+{%- if b.series_order -%}
+  {%- assign so = b.series_order | plus: 0 -%}
+  {%- unless so > 0 -%}{%- assign problems = problems | push: "series_order 必须是大于 0 的整数" -%}{%- endunless -%}
+  {%- if b.series -%}
+    {%- assign same_order = site.bounties | where: "series", b.series | where: "series_order", b.series_order -%}
+    {%- if same_order.size > 1 -%}
+      {%- assign msg = "series_order 在同一系列里重复（" | append: b.series | append: " / " | append: b.series_order | append: "）" -%}
+      {%- assign problems = problems | push: msg -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if b.status == 'awarded' -%}
+  {%- if b.winner == nil or b.winner == "" -%}{%- assign problems = problems | push: "status 是 awarded 时 winner 不能为空" -%}{%- endif -%}
+  {%- if b.payout == nil or b.payout == "" -%}{%- assign problems = problems | push: "status 是 awarded 时 payout 不能为空" -%}{%- endif -%}
+{%- endif -%}
 
 {%- if problems.size > 0 %}
 <div class="warn warn--error">

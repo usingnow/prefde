@@ -1,5 +1,6 @@
-{%- assign nav_cur = site.bounties | where: "status", "open" | sort: "deadline" | first -%}
-{%- if nav_cur == nil -%}{%- assign nav_cur = site.bounties | sort: "opens" | last -%}{%- endif -%}
+{%- assign nav_published = site.bounties | where_exp: "x", "x.status != 'draft'" -%}
+{%- assign nav_cur = nav_published | where: "status", "open" | sort: "deadline" | first -%}
+{%- if nav_cur == nil -%}{%- assign nav_cur = nav_published | sort: "opens" | last -%}{%- endif -%}
 <header class="site-head">
   <div class="wrap site-head__inner">
     <a class="brand" href="{{ '/' | relative_url }}">

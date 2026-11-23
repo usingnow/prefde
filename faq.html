@@ -75,6 +75,8 @@ permalink: /faq/
 
         <p>不要提交二进制文件——图片、压缩包、视频一律给外链。文件名必须是你的 GitHub 用户名，这是唯一的去重手段。</p>
 
+        <p><a href="{{ '/submit/' | relative_url }}">看一步一步的投稿指南（带截图）→</a></p>
+
         <h2>评审与兑现</h2>
 
         <table>
@@ -111,6 +113,7 @@ permalink: /faq/
             <tr><th>标记</th><th>含义</th><th>你还能做什么</th></tr>
           </thead>
           <tbody>
+            <tr><td>{% include state.html status='draft' %}</td><td>尚未发布，报名和投稿未开放</td><td>只能看题目</td></tr>
             <tr><td>{% include state.html status='open' %}</td><td>报名与投稿进行中</td><td>报名、投稿、修改投稿</td></tr>
             <tr><td>{% include state.html status='judging' %}</td><td>已截止，评审中</td><td>只能在 PR 里补充说明</td></tr>
             <tr><td>{% include state.html status='awarded' %}</td><td>已选出优胜者并兑现</td><td>无</td></tr>

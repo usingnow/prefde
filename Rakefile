@@ -1,5 +1,10 @@
 # 新建一期悬赏。用法见 docs/how-to-write-a-bounty.md
 require "date"
+require "fileutils"
+require "base64"
+require "yaml"
+require "time"
+require "tmpdir"
 
 DEADLINE_DAYS = 7
 
@@ -67,6 +72,24 @@ def open_in_editor(path)
   false
 end
 
+# 每期悬赏的投稿模板：一个 .txt 页面，渲染成 /assets/submissions/<code>.md。
+# 页面本身不存内容，只是把 _bounties 里的数据喂给 _includes/submission-template.md，
+# 这样悬赏改了标题/奖励/截止/评审标准，下载的模板会自动跟着变。
+SUBMISSION_STUB = <<~'LIQUID'
+  ---
+  layout: null
+  permalink: /assets/submissions/CODE.md
+  ---
+  {% assign b = site.bounties | where: "code", "CODE" | first %}{% include submission-template.md b=b %}
+LIQUID
+
+def write_submission_stub(code)
+  out = File.join("assets", "submissions", "#{code}.txt")
+  FileUtils.mkdir_p(File.dirname(out))
+  File.write(out, SUBMISSION_STUB.gsub("CODE", code))
+  out
+end
+
 desc '新建一期悬赏（交互式，直接 rake bounty）'
 task :bounty, [:date, :title] do |_t, args|
   interactive = $stdin.tty? && args[:date].nil?
@@ -118,9 +141,12 @@ task :bounty, [:date, :title] do |_t, args|
   tpl = tpl.sub(/^deadline: .*$/,  "deadline: #{deadline}")
   File.write(path, tpl)
 
+  stub = write_submission_stub(code)
+
   full = File.expand_path(path)
   puts ""
   puts "已创建 #{path}"
+  puts "已生成 #{stub}（投稿模板下载）"
 
   if interactive
     if open_in_editor(path)
@@ -134,6 +160,151 @@ task :bounty, [:date, :title] do |_t, args|
     puts %(  git add -A && git commit -m "第 #{code} 期：#{title}" && git push)
   else
     puts "接下来改 summary / 正文，然后 git add -A && git commit && git push"
+  end
+end
+
+desc '为每一期悬赏生成投稿模板下载文件'
+task :templates do
+  codes = Dir.glob("_bounties/*.md").map { |p| File.basename(p, ".md") }.sort
+  abort "没有找到 _bounties/*.md" if codes.empty?
+
+  codes.each do |code|
+    puts "已生成 #{write_submission_stub(code)}"
+  end
+end
+
+# ---------------------------------------------------------------------------
+# 分享图：每期一张 1080×1440 的 PNG，带群二维码
+# ---------------------------------------------------------------------------
+
+# 只从文件顶部的 front matter 读 YAML；没有 front matter 就返回空 Hash。
+def share_front_matter(path)
+  raw = File.read(path)
+  front = raw.start_with?("---") ? (raw.split(/^---\s*$/, 3)[1] || "") : ""
+  YAML.safe_load(front, permitted_classes: [Time, Date]) || {}
+rescue StandardError
+  {}
+end
+
+# 单次替换 {{TOKEN}}，避免替换值里又含 token 被二次替换。
+def share_replace(template, values)
+  template.gsub(/\{\{[A-Z_]+\}\}/) { |m| values.key?(m) ? values[m].to_s : m }
+end
+
+# 文字字段进 HTML 前转义；logo SVG 和二维码 data URI 不要过这里。
+def share_escape(value)
+  value.to_s
+       .gsub("&", "&amp;")
+       .gsub("<", "&lt;")
+       .gsub(">", "&gt;")
+       .gsub('"', "&quot;")
+end
+
+def build_share_poster(code)
+  bounty_path = File.join("_bounties", "#{code}.md")
+  abort "找不到 #{bounty_path}" unless File.exist?(bounty_path)
+
+  b = share_front_matter(bounty_path)
+  config = YAML.safe_load(File.read("_config.yml"), permitted_classes: [Time, Date]) || {}
+  share_cfg = config["share"] || {}
+
+  qr_rel = (share_cfg["qr_image"] || "/assets/img/wechat-group.png").sub(%r{\A/}, "")
+  qr_path = File.expand_path(qr_rel)
+  abort "找不到二维码图片：#{qr_rel}" unless File.exist?(qr_path)
+
+  logo_path = File.expand_path("assets/img/logo.svg")
+  abort "找不到站点 logo：#{logo_path}" unless File.exist?(logo_path)
+
+  qr_data = Base64.strict_encode64(File.binread(qr_path))
+  logo_svg = File.read(logo_path)
+
+  deadline_str =
+    begin
+      Time.parse(b["deadline"].to_s).strftime("%m.%d %H:%M")
+    rescue StandardError
+      b["deadline"].to_s
+    end
+
+  level_str = case b["level"].to_i
+              when 1 then "L1 基础"
+              when 2 then "L2 进阶"
+              when 3 then "L3 挑战"
+              else "未分级"
+              end
+
+  subs = b["submissions_shown"].to_i
+  threshold = b["threshold"].to_i
+  todo = threshold - subs
+  progress = todo.positive? ? "还差 #{todo} 份" : "已满 #{threshold} 份"
+
+  list = Array(b["submission_checklist"])
+  list_title = "本期交付"
+  if list.empty?
+    list = Array(b["criteria"])
+    list_title = "评审看什么"
+  end
+  deliverables = list.first(4).map { |item| "<li>#{share_escape(item)}</li>" }.join
+
+  title = b["title"].to_s
+  title_class = title.length > 18 ? "long" : ""
+  site_url = config["url"].to_s.sub(%r{\Ahttps?://}, "")
+
+  template = File.read("_templates/share-poster.html")
+  html = share_replace(template, {
+    "{{LOGO_SVG}}"    => logo_svg,
+    "{{KICKER}}"      => share_escape(b["kicker"] || "本期悬赏"),
+    "{{LEVEL}}"       => share_escape(level_str),
+    "{{SERIES}}"      => share_escape(b["series"]),
+    "{{TITLE_CLASS}}" => title_class,
+    "{{TITLE}}"       => share_escape(title),
+    "{{SUMMARY}}"     => share_escape(b["summary"]),
+    "{{REWARD}}"      => share_escape(b["reward"]),
+    "{{DEADLINE}}"    => share_escape(deadline_str),
+    "{{PROGRESS}}"    => share_escape(progress),
+    "{{DELIVERABLES_TITLE}}" => share_escape(list_title),
+    "{{DELIVERABLES}}" => deliverables,
+    "{{QR_IMAGE}}"    => "data:image/png;base64,#{qr_data}",
+    "{{QR_CAPTION}}"  => share_escape(share_cfg["qr_caption"] || "扫码加群"),
+    "{{URL}}"         => share_escape(site_url),
+    "{{CODE}}"        => share_escape(b["code"] || code)
+  })
+
+  out = File.join("assets", "img", "share", "#{code}.png")
+  FileUtils.mkdir_p(File.dirname(out))
+
+  chrome = which("google-chrome") || which("chromium") || which("chromium-browser")
+  abort "没找到 Chrome/Chromium。分享图用 headless 浏览器截图，请先装一个。" unless chrome
+
+  Dir.mktmpdir do |dir|
+    tmp = File.join(dir, "poster.html")
+    File.write(tmp, html)
+    ok = system(
+      chrome,
+      "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+      "--window-size=1080,1440",
+      "--screenshot=#{File.expand_path(out)}",
+      "file://#{tmp}",
+      out: File::NULL, err: File::NULL
+    )
+    abort "Chrome 截图失败：#{code}" unless ok
+  end
+
+  out
+end
+
+desc '生成每期悬赏的分享图（1080×1440 PNG）：rake share 或 rake "share[2026-11-19-b1]"'
+task :share, [:code] do |_t, args|
+  codes =
+    if args[:code].to_s.strip.empty?
+      Dir.glob("_bounties/*.md").map { |p| File.basename(p, ".md") }.sort
+    else
+      [args[:code].to_s.strip]
+    end
+
+  abort "没有找到 _bounties/*.md" if codes.empty?
+
+  codes.each do |code|
+    puts "已生成 #{build_share_poster(code)}"
   end
 end
 
@@ -186,10 +357,12 @@ PDF_CSS = <<~CSS
         font-size: 9pt; line-height: 1.55; white-space: pre-wrap; break-inside: avoid; }
   pre code { border: 0; background: none; padding: 0; font-size: 9pt; }
   table { width: 100%; border-collapse: collapse; margin: 10pt 0 14pt;
-          font-family: sans-serif; font-size: 9.5pt; break-inside: avoid; }
+          font-family: sans-serif; font-size: 9.5pt; }
+  tr { break-inside: avoid; }
   th { text-align: left; padding: 6pt 8pt; border-top: 1px solid #121212;
        border-bottom: 1px solid #121212; font-size: 8pt; font-weight: 600;
-       letter-spacing: .06em; text-transform: uppercase; color: #6b6b6b; }
+       letter-spacing: .06em; text-transform: uppercase; color: #6b6b6b;
+       white-space: nowrap; }
   td { padding: 6pt 8pt; border-bottom: 1px solid #d7d3cc; vertical-align: top; }
   hr { border: 0; border-top: 1px solid #d7d3cc; margin: 16pt 0; }
   @media screen {
