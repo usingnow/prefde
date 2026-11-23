@@ -15,11 +15,12 @@ permalink: /submit/
         <p class="lede">你交的不是代码，是一份「作品说明 + 链接」。代码放在你自己的公开仓库里；投稿只是在我们的仓库里新建一个 md 文件，提一个 Pull Request（简称 PR）。</p>
 
         <div class="warn">
-          <strong>先记住三件事</strong>
+          <strong>先记住四件事</strong>
           <ul>
             <li>投稿 = 提 PR。不是发邮件，不是传网盘，不是交压缩包。</li>
             <li>文件路径固定：<code>_submissions/期号/你的GitHub用户名.md</code></li>
             <li>正文只放链接和说明。图片、视频、压缩包一律给外链。</li>
+            <li>页面显示「尚未发布」时，说明还没开放报名和投稿。</li>
           </ul>
         </div>
 
@@ -32,7 +33,7 @@ permalink: /submit/
           <tbody>
             <tr><td>GitHub 账号</td><td>免费注册，五分钟。它是你唯一的身份，报名和投稿都用它。</td></tr>
             <tr><td>一个公开仓库</td><td>放你的代码和一份能跑起来的 README。仓库必须是 public。</td></tr>
-            <tr><td>本期期号</td><td>形如 <code>2026-11-19-b1</code>，在悬赏页标题下方。</td></tr>
+            <tr><td>本期期号</td><td>形如 <code>2026-11-19-odoo-01</code>，在悬赏页标题下方。复制完整的一串。</td></tr>
             <tr><td>演示地址（可选）</td><td>GitHub Pages、Vercel、一段录屏都行。没有就写「无」。</td></tr>
           </tbody>
         </table>
@@ -97,11 +98,11 @@ permalink: /submit/
 
         <p>文件名框里输入（斜杠会自动建目录）：</p>
 
-        <pre><code>2026-11-19-b1/你的GitHub用户名.md</code></pre>
+        <pre><code>2026-11-19-odoo-01/你的GitHub用户名.md</code></pre>
 
-        <p>把 <code>2026-11-19-b1</code> 换成你那一期的期号，把「你的GitHub用户名」换成你的真实用户名。例如：</p>
+        <p>把 <code>2026-11-19-odoo-01</code> 换成你那一期的期号，把「你的GitHub用户名」换成你的真实用户名。例如：</p>
 
-        <pre><code>2026-11-19-b1/linxiao.md</code></pre>
+        <pre><code>2026-11-19-odoo-01/linxiao.md</code></pre>
 
         <p>三个硬规则，错一个都可能不算投稿：</p>
 
@@ -131,9 +132,9 @@ permalink: /submit/
 
         <p>也可以直接复制下面的模板，粘进编辑区，换成你自己的内容。它是「说明书」，不是代码本体。</p>
 
-        <pre><code># 2026-11-19-b1 投稿 · linxiao
+        <pre><code># 2026-11-19-odoo-01 投稿 · linxiao
 
-- 期号：2026-11-19-b1
+- 期号：2026-11-19-odoo-01
 - 作品仓库：https://github.com/linxiao/odoo-install-diff
 - 演示地址：https://linxiao.github.io/odoo-install-diff/
 - 一句话说明：覆盖 8 个主题、24 条差异，每条都附官方文档引用。
@@ -189,9 +190,9 @@ permalink: /submit/
         <p>页面往下拉，点绿色的 <strong>Commit changes</strong>。在弹出的框里：</p>
 
         <ol>
-          <li>提交说明随便写，比如 <code>投稿 2026-11-19-b1</code></li>
+          <li>提交说明随便写，比如 <code>投稿 2026-11-19-odoo-01</code></li>
           <li>选 <strong>Create a new branch for this commit and start a pull request</strong></li>
-          <li>分支名保持默认，或写 <code>submission/2026-11-19-b1</code></li>
+          <li>分支名保持默认，或写 <code>submission/2026-11-19-odoo-01</code></li>
           <li>点 <strong>Propose changes</strong></li>
         </ol>
 
@@ -209,7 +210,7 @@ permalink: /submit/
 
         <p>标题建议写成：</p>
 
-        <pre><code>[投稿] 2026-11-19-b1 · linxiao</code></pre>
+        <pre><code>[投稿] 2026-11-19-odoo-01 · linxiao</code></pre>
 
         <p>正文里仓库自带的模板会自动出现，把四个字段填上，勾选自查，然后点 <strong>Create pull request</strong>。</p>
 
@@ -270,16 +271,16 @@ git clone https://github.com/你的用户名/{{ site.repo | split: "/" | last }}
 cd {{ site.repo | split: "/" | last }}
 
 # 3. 开分支
-git checkout -b submission/2026-11-19-b1
+git checkout -b submission/2026-11-19-odoo-01
 
 # 4. 新建文件
-mkdir -p _submissions/2026-11-19-b1
-$EDITOR _submissions/2026-11-19-b1/你的用户名.md
+mkdir -p _submissions/2026-11-19-odoo-01
+$EDITOR _submissions/2026-11-19-odoo-01/你的用户名.md
 
 # 5. 提交并推送
-git add _submissions/2026-11-19-b1/你的用户名.md
-git commit -m "投稿 2026-11-19-b1"
-git push -u origin submission/2026-11-19-b1</code></pre>
+git add _submissions/2026-11-19-odoo-01/你的用户名.md
+git commit -m "投稿 2026-11-19-odoo-01"
+git push -u origin submission/2026-11-19-odoo-01</code></pre>
 
         <p>push 完，终端会给一个 <strong>Compare &amp; pull request</strong> 链接，点进去创建 PR。</p>
 
@@ -335,7 +336,7 @@ git push -u origin submission/2026-11-19-b1</code></pre>
 
       <h2 class="side__title">记住这个路径</h2>
       <pre><code>_submissions/
-  2026-11-19-b1/
+  2026-11-19-odoo-01/
     linxiao.md</code></pre>
 
       <h2 class="side__title">一句话</h2>
