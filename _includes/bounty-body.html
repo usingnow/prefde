@@ -10,7 +10,9 @@
 {%- assign pct = b.submissions_shown | times: 100 | divided_by: b.threshold -%}
 {%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
 {%- assign todo = b.threshold | minus: b.submissions_shown -%}
-{%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
+{%- assign signup_title = "[报名] " | append: b.code | append: " · " | append: b.title -%}
+{%- assign signup_title_encoded = signup_title | url_encode -%}
+{%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml&title=" | append: signup_title_encoded -%}
 <main class="wrap">
   {% include validate.html b=b %}
   <p class="backlink"><a href="{{ '/archive/' | relative_url }}">← 全部悬赏</a></p>

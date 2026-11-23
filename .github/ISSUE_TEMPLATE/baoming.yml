@@ -1,31 +1,27 @@
 name: 报名表
-description: 报名参加本期悬赏
+description: 请从悬赏页的「我要报名」进入；直接打开不会带期号
 title: "[报名] "
 labels: ["报名"]
 body:
   - type: markdown
     attributes:
       value: |
-        **报名前请先读完整题目**：页面上的题目、交付要求、评审标准与规则都要看一遍，下面会逐项确认。
+        **请从悬赏页的「我要报名」进入这张表。**
+        直接通过模板列表打开不会带期号，无法对应到具体一期，管理员会关闭。
 
-        **报名后请在截止前提交作品**：PR 到 `_submissions/<期号>/你的GitHub用户名.md`。
+        标题已经带上「期号 + 题目」，请不要修改。投稿目录用标题里的期号：
+        `_submissions/<期号>/你的GitHub用户名.md`
+
+        题目、交付要求、评审标准与规则都在悬赏页上；截止时间以悬赏页为准。
         评审结果会直接回复在这条 issue 下，请保持订阅。
 
         一期内每人只开一条，重复的会被手动关闭。
-  - type: input
-    id: bounty
-    attributes:
-      label: 期号
-      description: 见悬赏页标题下方，形如 2026-11-19-odoo-01
-      placeholder: "2026-11-19-odoo-01"
-    validations:
-      required: true
   - type: textarea
     id: plan
     attributes:
       label: 你打算怎么做
-      description: 一两句话即可，用于评审时了解你的思路
-      placeholder: 用 Rust 写一个 CLI，支持 OPML 导入……
+      description: 一两句话即可，用于评审时了解你的思路。不需要写完整方案。
+      placeholder: 请用简洁明了的方式描述你的大致解题思路。
     validations:
       required: true
   - type: checkboxes

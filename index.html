@@ -18,7 +18,6 @@ title: 当期悬赏
 {%- assign pct = cur.submissions_shown | times: 100 | divided_by: cur.threshold -%}
 {%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
 {%- assign todo = cur.threshold | minus: cur.submissions_shown -%}
-{%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml" -%}
 <main class="wrap home">
   {% include validate.html b=cur %}
 
