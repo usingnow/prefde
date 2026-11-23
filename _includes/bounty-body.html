@@ -12,7 +12,7 @@
 {%- assign todo = b.threshold | minus: b.submissions_shown -%}
 {%- assign signup_title = "[报名] " | append: b.code | append: " · " | append: b.title -%}
 {%- assign signup_title_encoded = signup_title | url_encode -%}
-{%- assign signup_url = site.repo_url | append: "/issues/new?template=baoming.yml&title=" | append: signup_title_encoded -%}
+{%- assign signup_url = '/signup/' | relative_url | append: '?code=' | append: b.code | append: '&title=' | append: signup_title_encoded -%}
 <main class="wrap">
   {% include validate.html b=b %}
   <p class="backlink"><a href="{{ '/archive/' | relative_url }}">← 全部悬赏</a></p>

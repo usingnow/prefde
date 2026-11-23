@@ -1,0 +1,49 @@
+---
+layout: default
+title: 正在打开报名表
+permalink: /signup/
+noindex: true
+sitemap: false
+---
+<main class="wrap page">
+  <p class="kicker">报名</p>
+  <h1 class="display display--sm">正在打开 GitHub 报名表</h1>
+  <p class="meta" id="signup-status">如果几秒后没有反应，请点下面的链接。</p>
+  <hr class="rule-red">
+
+  <p>
+    <a class="btn btn--primary" id="signup-manual"
+       href="{{ '/archive/' | relative_url }}" hidden>打开报名表 →</a>
+  </p>
+
+  <noscript>
+    <p>需要 JavaScript 才能自动跳转。请回到悬赏页，或直接打开
+      <a href="https://github.com/usingnow/prefde/issues/new?template=baoming.yml">GitHub 报名表</a>。
+    </p>
+  </noscript>
+</main>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var code = (params.get('code') || '').trim();
+    var title = (params.get('title') || '').trim();
+    var status = document.getElementById('signup-status');
+    var manual = document.getElementById('signup-manual');
+
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(code)) {
+      status.textContent = '期号无效。请回到悬赏页，重新点「我要报名」。';
+      manual.href = '{{ "/archive/" | relative_url }}';
+      manual.textContent = '回到归档 →';
+      manual.hidden = false;
+      return;
+    }
+
+    var url = 'https://github.com/usingnow/prefde/issues/new?template=baoming.yml'
+      + '&title=' + encodeURIComponent(title || ('[报名] ' + code));
+
+    manual.href = url;
+    manual.hidden = false;
+    window.location.replace(url);
+  })();
+</script>
