@@ -1,0 +1,5 @@
+---
+layout: null
+permalink: /assets/submissions/2026-11-19-odoo-06.md
+---
+{% assign b = site.bounties | where: "code", "2026-11-19-odoo-06" | first %}{% include submission-template.md b=b %}
