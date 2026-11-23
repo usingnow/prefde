@@ -1,0 +1,62 @@
+<!-- 背景色卡组件：默认不在页面显示；需要时在页面里 include color-swatches.html。 -->
+<style>
+  .swatches { border: 1px dashed var(--red); background: var(--paper-2); padding: 18px 20px 20px; margin: 8px 0 36px; }
+  .swatches__kicker { margin: 0 0 6px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: .12em; color: var(--red); text-transform: uppercase; }
+  .swatches__title { margin: 0 0 4px; font-size: 22px; font-weight: 600; }
+  .swatches__note { margin: 0 0 14px; font-family: var(--font-sans); font-size: 13px; line-height: 1.6; color: var(--muted); }
+  .swatches__grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
+  .swatch { width: 104px; padding: 0; border: 1px solid var(--rule); background: transparent; cursor: pointer; text-align: left; font-family: var(--font-sans); }
+  .swatch__chip { display: block; height: 48px; background: var(--c); border-bottom: 1px solid var(--rule); }
+  .swatch__label { display: block; padding: 6px 8px 0; font-size: 12px; font-weight: 600; color: var(--ink); }
+  .swatch__hex { display: block; padding: 0 8px 7px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+  .swatch.is-active { outline: 2px solid var(--red); outline-offset: 2px; }
+  .swatches__card { margin: 0 0 12px; padding: 14px 16px; border: 1px solid var(--rule); background: var(--paper); }
+  .swatches__card p { margin: 0 0 6px; }
+  .swatches__card p:last-child { margin: 0; }
+  .swatches__reset { font-family: var(--font-sans); font-size: 13px; padding: 7px 12px; border: 1px solid var(--ink); background: transparent; cursor: pointer; }
+  .swatches__reset:hover { background: var(--ink); color: #fff; }
+</style>
+<section class="swatches">
+  <p class="swatches__kicker">背景色卡 · 预览组件</p>
+  <h2 class="swatches__title">背景暖白色对比</h2>
+  <p class="swatches__note">点任意色块可切换整页背景；当前：<span id="swatch-current" class="mono">#fcfbf7</span></p>
+  <div class="swatches__grid">
+    <button class="swatch" data-color="#ffffff" style="--c:#ffffff"><span class="swatch__chip"></span><span class="swatch__label">纯白</span><span class="swatch__hex">#ffffff</span></button>
+    <button class="swatch" data-color="#fdfcf9" style="--c:#fdfcf9"><span class="swatch__chip"></span><span class="swatch__label">极浅暖白</span><span class="swatch__hex">#fdfcf9</span></button>
+    <button class="swatch" data-color="#fcfbf7" style="--c:#fcfbf7"><span class="swatch__chip"></span><span class="swatch__label">当前暖白</span><span class="swatch__hex">#fcfbf7</span></button>
+    <button class="swatch" data-color="#fbf9f4" style="--c:#fbf9f4"><span class="swatch__chip"></span><span class="swatch__label">浅米白</span><span class="swatch__hex">#fbf9f4</span></button>
+    <button class="swatch" data-color="#faf8f2" style="--c:#faf8f2"><span class="swatch__chip"></span><span class="swatch__label">米白</span><span class="swatch__hex">#faf8f2</span></button>
+    <button class="swatch" data-color="#f8f6f0" style="--c:#f8f6f0"><span class="swatch__chip"></span><span class="swatch__label">暖米白</span><span class="swatch__hex">#f8f6f0</span></button>
+    <button class="swatch" data-color="#f7f5f0" style="--c:#f7f5f0"><span class="swatch__chip"></span><span class="swatch__label">纸张色</span><span class="swatch__hex">#f7f5f0</span></button>
+  </div>
+  <div class="swatches__card">
+    <p><strong>样例：</strong>这是一张卡片，看看正文、标题、红条在暖白底上的效果。</p>
+    <p><strong>加粗</strong> · <a href="#">链接</a> · <code>diff.json</code> · 正文里的中文和 Latin 混排。</p>
+  </div>
+  <button class="swatches__reset" id="swatch-reset">恢复当前色</button>
+</section>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var current = document.getElementById('swatch-current');
+    var buttons = document.querySelectorAll('.swatch');
+    function setColor(color) {
+      root.style.setProperty('--paper', color);
+      current.textContent = color;
+      buttons.forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.color === color);
+      });
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { setColor(b.dataset.color); });
+    });
+    var currentPaper = getComputedStyle(root).getPropertyValue('--paper').trim() || '#fcfbf7';
+    var reset = document.getElementById('swatch-reset');
+    if (reset) {
+      reset.textContent = '恢复 ' + currentPaper;
+      reset.addEventListener('click', function () { setColor(currentPaper); });
+    }
+    setColor(currentPaper);
+  })();
+</script>
+<!-- 背景色卡结束 -->
