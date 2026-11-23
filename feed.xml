@@ -1,0 +1,44 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.lang | default: 'zh-CN' }}">
+  <generator uri="https://jekyllrb.com/" version="{{ jekyll.version }}">Jekyll</generator>
+  <link href="{{ '/feed.xml' | absolute_url }}" rel="self" type="application/atom+xml" />
+  <link href="{{ '/' | absolute_url }}" rel="alternate" type="text/html" hreflang="{{ site.lang | default: 'zh-CN' }}" />
+  {%- assign items = site.bounties | where_exp: "b", "b.status != 'draft'" | sort: "opens" | reverse -%}
+  {%- assign latest = items | first -%}
+  <updated>{% if latest %}{{ latest.opens | date_to_xmlschema }}{% else %}{{ site.time | date_to_xmlschema }}{% endif %}</updated>
+  <id>{{ '/feed.xml' | absolute_url | xml_escape }}</id>
+  <title type="html">{{ site.title | append: " · 悬赏" | xml_escape }}</title>
+  <subtitle>{{ site.description | xml_escape }}</subtitle>
+  <icon>{{ '/assets/img/logo.svg' | absolute_url | xml_escape }}</icon>
+  <logo>{{ '/assets/img/logo.svg' | absolute_url | xml_escape }}</logo>
+  <author><name>{{ site.title | xml_escape }}</name></author>
+  {%- assign cdata_end = "]]>" -%}
+  {%- assign cdata_escaped = "]]]]><![CDATA[>" -%}
+  {%- for b in items limit: 30 %}
+  <entry>
+    <title type="html">{{ b.title | xml_escape }}</title>
+    <link href="{{ b.url | absolute_url }}" rel="alternate" type="text/html" title="{{ b.title | xml_escape }}" />
+    <published>{{ b.opens | date_to_xmlschema }}</published>
+    <updated>{{ b.opens | date_to_xmlschema }}</updated>
+    <id>{{ b.url | absolute_url | xml_escape }}</id>
+    <summary type="html"><![CDATA[{{ b.summary | strip_html | normalize_whitespace | replace: cdata_end, cdata_escaped }}]]></summary>
+    <content type="html" xml:base="{{ b.url | absolute_url | xml_escape }}"><![CDATA[{{ b.content | strip | replace: cdata_end, cdata_escaped }}]]></content>
+    <author><name>{{ site.title | xml_escape }}</name></author>
+    {%- if b.series %}
+    <category term="{{ b.series | xml_escape }}" />
+    {%- endif %}
+    {%- if b.level %}
+    <category term="L{{ b.level }}" />
+    {%- endif %}
+    {%- assign share_path = '/assets/img/share/' | append: b.code | append: '.png' -%}
+    {%- assign share_file = site.static_files | where: "path", share_path | first -%}
+    {%- if share_file %}
+    <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="{{ share_path | absolute_url | xml_escape }}" />
+    {%- endif %}
+  </entry>
+  {%- endfor %}
+</feed>
