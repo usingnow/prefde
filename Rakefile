@@ -111,13 +111,28 @@ def unique_bounty_code(base)
   code
 end
 
+# 统一系列名的空格/大小写，避免「Odoo 安装系列」和「Odoo  安装系列」匹配不上。
+def normalize_series(value)
+  value.to_s.strip.gsub(/\u3000/, " ").gsub(/\s+/, " ").downcase
+end
+
+# 现有系列名（去重、排序），用于菜单选择。
+def existing_series_names
+  Dir.glob("_bounties/*.md")
+     .map { |path| share_front_matter(path)["series"].to_s.strip }
+     .reject(&:empty?)
+     .uniq
+     .sort
+end
+
 # 同一系列里现有最大 series_order + 1。
 def next_series_order(series_name)
   return 1 if series_name.to_s.strip.empty?
 
+  target = normalize_series(series_name)
   orders = Dir.glob("_bounties/*.md").map do |path|
     data = share_front_matter(path)
-    data["series"].to_s == series_name.to_s ? data["series_order"].to_i : 0
+    normalize_series(data["series"]) == target ? data["series_order"].to_i : 0
   end
   (orders.max || 0) + 1
 end
@@ -169,7 +184,14 @@ task :bounty, [:date, :title] do |_t, args|
   else
     series_slug = slugify(series_slug)
     abort "系列代号只能用小写字母、数字、连字符，例如 odoo" if series_slug.empty?
-    series_name = interactive ? ask("系列显示名（如 Odoo 安装系列）", "") : ""
+    names = existing_series_names
+    if interactive && names.any?
+      series_name = choose("系列显示名", names, names.first)
+    elsif interactive
+      series_name = ask("系列显示名（如 Odoo 安装系列）", "")
+    else
+      series_name = ""
+    end
     abort "系列显示名不能为空" if series_name.to_s.strip.empty?
     suggested_order = next_series_order(series_name)
     order_raw = interactive ? ask("系列序号", suggested_order) : suggested_order
