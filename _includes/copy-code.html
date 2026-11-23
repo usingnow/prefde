@@ -1,0 +1,57 @@
+<script>
+  (function () {
+    document.querySelectorAll('div.highlight').forEach(function (block) {
+      var pre = block.querySelector('pre');
+      var code = pre && pre.querySelector('code');
+      if (!pre || !code) return;
+
+      // 行号：按代码行数生成独立的 gutter，不破坏代码 HTML
+      var text = code.innerText.replace(/\n$/, '');
+      var count = text.split('\n').length;
+      var gutter = document.createElement('div');
+      gutter.className = 'line-numbers';
+      gutter.setAttribute('aria-hidden', 'true');
+      for (var i = 1; i <= count; i++) {
+        var span = document.createElement('span');
+        span.textContent = i;
+        gutter.appendChild(span);
+      }
+
+      // 横向滚动容器：gutter 固定，代码单独滚动
+      var scroll = document.createElement('div');
+      scroll.className = 'code-scroll';
+      block.insertBefore(gutter, pre);
+      block.insertBefore(scroll, pre);
+      scroll.appendChild(pre);
+
+      // 复制按钮
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-code';
+      btn.textContent = '复制';
+      btn.setAttribute('aria-label', '复制代码');
+
+      btn.addEventListener('click', function () {
+        var done = function () {
+          btn.textContent = '已复制';
+          setTimeout(function () { btn.textContent = '复制'; }, 1500);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {});
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); done(); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+      });
+
+      block.appendChild(btn);
+    });
+  })();
+</script>

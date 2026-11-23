@@ -1,0 +1,86 @@
+/* ---------- 代码块：Rouge 主题 + 行号 + 复制按钮 ---------- */
+
+/* 主题自带冷灰背景，改成透明，让站点的 paper-2 透出来 */
+.highlight,
+.highlight .w { background-color: transparent; }
+
+/* 外层容器：背景、边框、复制按钮的定位基准 */
+div.highlight {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  margin: 0 0 1em;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+/* 没有 JS 时，pre 自己承担内边距 */
+div.highlight > pre {
+  flex: 1;
+  min-width: 0;
+  padding: var(--s4) 18px;
+  overflow-x: auto;
+}
+
+/* 里面的 pre 只负责排版 */
+div.highlight pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* JS 加上的行号槽 */
+div.highlight .line-numbers {
+  flex: none;
+  width: 44px;
+  padding: var(--s4) 10px var(--s4) 0;
+  text-align: right;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.65;
+  user-select: none;
+  border-right: 1px solid var(--rule);
+  background: var(--paper-2);
+}
+div.highlight .line-numbers span { display: block; }
+
+/* JS 加上的横向滚动容器 */
+div.highlight .code-scroll {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  padding: var(--s4) 18px;
+}
+div.highlight .code-scroll > pre { padding: 0; }
+
+/* 复制按钮 */
+.copy-code {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  padding: 5px 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s, color 0.12s, border-color 0.12s;
+}
+div.highlight:hover .copy-code { opacity: 1; }
+.copy-code:hover { color: var(--red); border-color: var(--red); }
+
+@media (hover: none) {
+  .copy-code { opacity: 1; }
+}
