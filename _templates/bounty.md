@@ -1,14 +1,17 @@
 ---
-code: "2026-01-01"
+code: "2026-01-01-example"
 title: "（标题：说清要做什么，不要写太泛）"
 kicker: "本期悬赏"
+series: ""
+series_order:
+created: 2026-01-01T09:00:00+08:00
 level: 2
 summary: "（一句话说清要做什么。读者只看这一句决定要不要点开）"
 reward: "¥800"
 reward_note: "含一次 1v1 代码评审 · 达标即获培训名额"
-opens: 2026-01-01T09:00:00+08:00
-deadline: 2026-01-08T23:59:59+08:00
-status: open
+opens: 2026-01-08T09:00:00+08:00
+deadline: 2026-01-15T23:59:59+08:00
+status: draft
 threshold: 10
 signups_shown: 0
 submissions_shown: 0

@@ -90,55 +90,161 @@ def write_submission_stub(code)
   out
 end
 
-desc '新建一期悬赏（交互式，直接 rake bounty）'
+# 当前时间（+08:00）的日期，避免依赖系统时区。
+def today_cn
+  Time.now.getlocal("+08:00").strftime("%Y-%m-%d")
+end
+
+# 只保留小写字母、数字、连字符，用来生成 code。
+def slugify(value)
+  value.to_s.strip.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
+end
+
+# 在 _bounties 下找下一个不冲突的 code。
+def unique_bounty_code(base)
+  code = base
+  n = 2
+  while File.exist?(File.join("_bounties", "#{code}.md"))
+    code = "#{base}-#{n}"
+    n += 1
+  end
+  code
+end
+
+# 同一系列里现有最大 series_order + 1。
+def next_series_order(series_name)
+  return 1 if series_name.to_s.strip.empty?
+
+  orders = Dir.glob("_bounties/*.md").map do |path|
+    data = share_front_matter(path)
+    data["series"].to_s == series_name.to_s ? data["series_order"].to_i : 0
+  end
+  (orders.max || 0) + 1
+end
+
+# 把 "2026-12-01" 或 "2026-12-01 09:00" 解析成 +08:00 的 Time。
+def parse_plan_time(raw, default_hour, default_min, default_sec)
+  str = raw.to_s.strip
+  str = today_cn if str.empty?
+  date_part, time_part = str.split(/[ T]/, 2)
+  y, m, d = date_part.split("-").map(&:to_i)
+  hh, mm = time_part.to_s.split(":").map(&:to_i)
+  hh = default_hour if hh.nil?
+  mm = default_min if mm.nil?
+  Time.new(y, m, d, hh, mm, default_sec, "+08:00")
+rescue ArgumentError, TypeError
+  abort "时间格式不对：#{raw}。要写成 2026-12-01 或 \"2026-12-01 09:00\"。"
+end
+
+def iso_ts(time)
+  time.strftime("%Y-%m-%dT%H:%M:%S+08:00")
+end
+
+def yaml_quote(value)
+  value.to_s.inspect
+end
+
+desc '新建一期悬赏（交互式，默认保存为草稿）'
 task :bounty, [:date, :title] do |_t, args|
   interactive = $stdin.tty? && args[:date].nil?
 
   puts ""
-  date_raw = interactive ? ask("期号", Date.today.iso8601) : (args[:date] || Date.today.iso8601)
+  date_raw = interactive ? ask("日期", today_cn) : (args[:date] || today_cn)
   begin
     date = Date.strptime(date_raw.to_s.strip, "%Y-%m-%d")
   rescue ArgumentError
     abort "日期格式不对：#{date_raw}。要写成 2026-12-01 这样。"
   end
 
-  title     = interactive ? ask("标题") : (args[:title] || "（待填标题）")
-  title     = "（待填标题）" if title.nil? || title.to_s.empty?
-  reward    = interactive ? choose("奖励", REWARD_OPTIONS, REWARD_DEFAULT) : REWARD_DEFAULT
-  reward    = "¥#{reward}" if reward.to_s =~ /\A\d+\z/   # 手输数字自动补 ¥
-  threshold = interactive ? choose("成团门槛", THRESHOLD_OPTIONS.map { |t| "#{t} 份" }, "#{THRESHOLD_DEFAULT} 份") : THRESHOLD_DEFAULT
+  # 系列 / 单期
+  series_slug = interactive ? ask("系列代号（小写英文，如 odoo；留空＝单期）", "") : ""
+  series_name = ""
+  series_order = nil
 
+  if series_slug.to_s.strip.empty?
+    short_slug = interactive ? ask("短名（小写英文，如 rss-reader）", "new-bounty") : "new-bounty"
+    short_slug = slugify(short_slug)
+    abort "短名只能用小写字母、数字、连字符" if short_slug.empty?
+    code_base = "#{date.iso8601}-#{short_slug}"
+  else
+    series_slug = slugify(series_slug)
+    abort "系列代号只能用小写字母、数字、连字符，例如 odoo" if series_slug.empty?
+    series_name = interactive ? ask("系列显示名（如 Odoo 安装系列）", "") : ""
+    abort "系列显示名不能为空" if series_name.to_s.strip.empty?
+    suggested_order = next_series_order(series_name)
+    order_raw = interactive ? ask("系列序号", suggested_order) : suggested_order
+    series_order = order_raw.to_s.gsub(/[^0-9]/, "").to_i
+    series_order = suggested_order if series_order <= 0
+    code_base = "#{date.iso8601}-#{series_slug}-#{format('%02d', series_order)}"
+  end
+
+  title = interactive ? ask("标题") : (args[:title] || "（待填标题）")
+  title = "（待填标题）" if title.nil? || title.to_s.empty?
+
+  suggested_code = unique_bounty_code(code_base)
+  code = interactive ? ask("代号 code", suggested_code) : suggested_code
+  code = code.to_s.strip.downcase
+  abort "代号只能用小写字母、数字、连字符，例如 2026-12-01-odoo-07" unless code =~ /\A[a-z0-9][a-z0-9-]*\z/
+
+  path = File.join("_bounties", "#{code}.md")
+  abort "\n#{path} 已经存在了。换一个代号，或者先删掉旧文件。" if File.exist?(path)
+
+  level = interactive ? choose("难度等级", ["1 基础", "2 进阶", "3 挑战"], "2 进阶") : "2 进阶"
+  lv = (level.to_s[/[0-9]/] || "2").to_i
+
+  reward = interactive ? choose("奖励", REWARD_OPTIONS, REWARD_DEFAULT) : REWARD_DEFAULT
+  reward = "¥#{reward}" if reward.to_s =~ /\A\d+\z/
+
+  threshold = interactive ? choose("成团门槛", THRESHOLD_OPTIONS.map { |t| "#{t} 份" }, "#{THRESHOLD_DEFAULT} 份") : THRESHOLD_DEFAULT
   th = threshold.to_s.gsub(/[^0-9]/, "")
   th = "10" if th.empty?
 
-  code     = date.iso8601
-  path     = File.join("_bounties", "#{code}.md")
-  opens    = "#{code}T09:00:00+08:00"
-  deadline = "#{(date + DEADLINE_DAYS).iso8601}T23:59:59+08:00"
+  planned_publish = date + DEADLINE_DAYS
+  opens_raw = interactive ? ask("计划发布日期", "#{planned_publish.iso8601} 09:00") : "#{planned_publish.iso8601} 09:00"
+  opens = parse_plan_time(opens_raw, 9, 0, 0)
 
-  abort "\n#{path} 已经存在了。要重写就先删掉它，或者换一个日期。" if File.exist?(path)
+  planned_deadline = planned_publish + DEADLINE_DAYS
+  deadline_raw = interactive ? ask("计划截止日期", "#{planned_deadline.iso8601} 23:59") : "#{planned_deadline.iso8601} 23:59"
+  deadline = parse_plan_time(deadline_raw, 23, 59, 59)
+
+  abort "截止时间必须晚于计划发布时间。" if deadline <= opens
+
+  created = Time.now.getlocal("+08:00")
 
   if interactive
+    series_label = series_name.empty? ? "（单期）" : "#{series_name} 第 #{series_order} 题"
     puts ""
     puts "要创建 #{path}："
-    puts "  期号   #{code}"
-    puts "  标题   #{title}"
-    puts "  奖励   #{reward}"
-    puts "  门槛   #{th} 份"
-    puts "  发布   #{opens}"
-    puts "  截止   #{deadline}（#{DEADLINE_DAYS} 天后）"
+    puts "  code     #{code}"
+    puts "  标题     #{title}"
+    puts "  系列     #{series_label}"
+    puts "  难度     L#{lv}"
+    puts "  奖励     #{reward}"
+    puts "  门槛     #{th} 份"
+    puts "  计划发布 #{iso_ts(opens)}"
+    puts "  计划截止 #{iso_ts(deadline)}"
+    puts "  状态     draft（尚未发布）"
     puts ""
     confirm = ask("确认", "Y")
     abort "已取消，什么都没有写。" unless confirm.to_s.downcase.start_with?("y")
   end
 
   tpl = File.read("_templates/bounty.md")
-  tpl = tpl.sub(/^code: .*$/,      %(code: "#{code}"))
-  tpl = tpl.sub(/^title: .*$/,     %(title: "#{title}"))
-  tpl = tpl.sub(/^reward: .*$/,    %(reward: "#{reward}"))
-  tpl = tpl.sub(/^threshold: .*$/, "threshold: #{th}")
-  tpl = tpl.sub(/^opens: .*$/,     "opens: #{opens}")
-  tpl = tpl.sub(/^deadline: .*$/,  "deadline: #{deadline}")
+  series_order_line = series_order.nil? ? "series_order:" : "series_order: #{series_order}"
+  replacements = {
+    /^code:.*$/         => %(code: #{yaml_quote(code)}),
+    /^title:.*$/        => %(title: #{yaml_quote(title)}),
+    /^series:.*$/       => %(series: #{yaml_quote(series_name)}),
+    /^series_order:.*$/ => series_order_line,
+    /^created:.*$/      => %(created: #{iso_ts(created)}),
+    /^level:.*$/        => %(level: #{lv}),
+    /^reward:.*$/       => %(reward: #{yaml_quote(reward)}),
+    /^threshold:.*$/    => %(threshold: #{th}),
+    /^opens:.*$/        => %(opens: #{iso_ts(opens)}),
+    /^deadline:.*$/     => %(deadline: #{iso_ts(deadline)}),
+    /^status:.*$/       => %(status: draft)
+  }
+  replacements.each { |pattern, value| tpl = tpl.sub(pattern, value) }
   File.write(path, tpl)
 
   stub = write_submission_stub(code)
@@ -156,11 +262,54 @@ task :bounty, [:date, :title] do |_t, args|
       puts "  #{full}"
     end
     puts ""
-    puts "改 summary、正文，保存后复制这一行到终端："
-    puts %(  git add -A && git commit -m "第 #{code} 期：#{title}" && git push)
+    puts "改 summary、正文、submission_checklist，保存后："
+    puts "  1. 本地预览：bundle exec jekyll serve"
+    puts "  2. 发布：rake \"publish[#{code}]\""
+    puts "  3. 提交：git add -A && git commit -m \"第 #{code} 期：#{title}\" && git push"
   else
-    puts "接下来改 summary / 正文，然后 git add -A && git commit && git push"
+    puts "接下来改 summary / 正文，然后："
+    puts "  rake \"publish[#{code}]\""
+    puts "  git add -A && git commit && git push"
   end
+end
+
+desc '发布一期草稿：rake "publish[2026-12-01-odoo-07]"'
+task :publish, [:code] do |_t, args|
+  code = args[:code].to_s.strip
+  abort '用法：rake "publish[期号]"' if code.empty?
+
+  path = File.join("_bounties", "#{code}.md")
+  abort "找不到 #{path}" unless File.exist?(path)
+
+  data = share_front_matter(path)
+  unless data["status"] == "draft"
+    abort "这一期状态是 #{data['status']}，只有 draft 可以发布。"
+  end
+
+  now = Time.now.getlocal("+08:00")
+  raw = File.read(path)
+  raw = raw.sub(/^status:.*$/, "status: open")
+  raw = raw.sub(/^opens:.*$/, "opens: #{iso_ts(now)}")
+
+  deadline = data["deadline"]
+  if deadline.nil? || deadline.to_s.empty? || Time.parse(deadline.to_s) <= now
+    new_deadline = Time.new(now.year, now.month, now.day, 23, 59, 59, "+08:00") + DEADLINE_DAYS * 86_400
+    raw = raw.sub(/^deadline:.*$/, "deadline: #{iso_ts(new_deadline)}")
+    puts "截止时间已过或为空，自动改为 #{iso_ts(new_deadline)}"
+  end
+
+  File.write(path, raw)
+  stub = write_submission_stub(code)
+  poster = build_share_poster(code)
+
+  puts ""
+  puts "已发布 #{code}"
+  puts "  状态   open"
+  puts "  发布   #{iso_ts(now)}"
+  puts "  模板   #{stub}"
+  puts "  分享图 #{poster}"
+  puts ""
+  puts "提交：git add -A && git commit -m \"发布 #{code}\" && git push"
 end
 
 desc '为每一期悬赏生成投稿模板下载文件'
