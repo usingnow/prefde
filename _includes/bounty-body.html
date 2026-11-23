@@ -60,6 +60,13 @@
     <aside class="col-side">
       {% include state-legend.html status=b.status %}
 
+      <h2 class="side__title">私域群</h2>
+      <figure class="qr">
+        <img src="{{ '/assets/img/wechat-group.png' | relative_url }}"
+             alt="管理员企业微信二维码" width="200" height="200" loading="lazy">
+        <figcaption>申请加入群聊，请注明学校与专业。</figcaption>
+      </figure>
+
       {%- assign closed = site.bounties | where_exp: "x", "x.status != 'open'" | where_exp: "x", "x.status != 'draft'" -%}
       {%- if closed.size > 0 %}
       <h2 class="side__title">往期</h2>
