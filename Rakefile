@@ -463,7 +463,7 @@ def build_share_poster(code)
   out
 end
 
-desc '生成每期悬赏的分享图（1080×1440 PNG）：rake share 或 rake "share[2026-11-19-b1]"'
+desc '生成每期悬赏的分享图（1080×1440 PNG）：rake share 或 rake "share[2026-11-19-odoo-01]"'
 task :share, [:code] do |_t, args|
   codes =
     if args[:code].to_s.strip.empty?
